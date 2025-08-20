@@ -45,6 +45,7 @@ export const isUser = async (values: z.infer<typeof LoginSchema>) => {
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userWithoutPass } = user;
 
     return userWithoutPass;

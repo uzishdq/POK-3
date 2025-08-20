@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import {
   JENIS_SIMPANAN,
   JENIS_SIMPANAN_DATE_RANGE,
@@ -17,7 +16,6 @@ import {
   unitKerjaTable,
 } from "@/lib/db/schema";
 import {
-  formatTanggalID,
   formatTglPrefixId,
   isRangeDate,
   isValidId,
@@ -25,10 +23,7 @@ import {
   transformPembagianSimpanan,
   transformStrukSimpananBerjangka,
 } from "@/lib/helper";
-import {
-  noPengambilanSimpananSchema,
-  PembagianSimpananSchema,
-} from "@/lib/schema/schema-simpanan";
+import { noPengambilanSimpananSchema } from "@/lib/schema/schema-simpanan";
 import {
   JenisPendaftaranSimpananType,
   JenisSimpananType,
@@ -38,8 +33,6 @@ import {
   TLaporanSimpananBerjangka,
 } from "@/lib/types/laporan";
 import {
-  TDetailPembagianSimpanan,
-  TInputDetailPembagianSimpanan,
   TPendaftaranSimpanan,
   TResultTransformPembagianSimpanan,
   TSettingSimpanan,
@@ -66,7 +59,6 @@ import {
   inArray,
   like,
   lte,
-  or,
   sum,
 } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
@@ -295,6 +287,7 @@ export const getSumSimpananBerjangka = async (
       total: total.sum,
     };
   } catch (error) {
+    console.error("error sum simpanan berjangka : ", error);
     return {
       nama: "none",
       total: 0,
@@ -571,7 +564,7 @@ export const getSumSimpanan = unstable_cache(
 
 export const getMaxPengambilanSimpanan = async (id: string) => {
   try {
-    let result: TMaxPengambilan = {
+    const result: TMaxPengambilan = {
       sukamana: 0,
       lebaran: 0,
       qurban: 0,
@@ -612,7 +605,7 @@ export const getMaxPengambilanSimpanan = async (id: string) => {
 
 export const getAllSimpananById = async (id: string) => {
   try {
-    let result: TSumSimpananAnggota = {
+    const result: TSumSimpananAnggota = {
       WAJIB: 0,
       SUKAMANA: 0,
       LEBARAN: 0,

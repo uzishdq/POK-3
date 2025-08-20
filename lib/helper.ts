@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { taripAsuransi } from "./data-asuransi";
 import { TColumnExcell } from "./types/excell";
 import {
@@ -1105,7 +1106,7 @@ export function generateSimpananBerjangkaExcellData(
   basil: number
 ): {
   columns: TColumnExcell[];
-  rows: Record<string, any>[];
+  rows: Record<string, unknown>[];
 } {
   const allBulanSet = new Set<string>();
 
@@ -1142,7 +1143,7 @@ export function generateSimpananBerjangkaExcellData(
 
   // Buat baris data
   const rows = laporan.map((item) => {
-    const row: Record<string, any> = {
+    const row: Record<string, unknown> = {
       noAnggota: item.noAnggota,
       namaAnggota: item.namaAnggota,
       namaUnitKerja: item.namaUnitKerja,

@@ -16,7 +16,7 @@ import {
   JenisPinjamanType,
 } from "@/lib/types/helper";
 import { THistoryPotongGaji, TPotongGaji } from "@/lib/types/potong-gaji";
-import { and, asc, desc, eq, max, or } from "drizzle-orm";
+import { and, asc, desc, eq, max } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 const getAnggotaPotonganGaji = async () => {

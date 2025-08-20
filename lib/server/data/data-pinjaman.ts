@@ -209,7 +209,7 @@ export const getLastPinjamanById = unstable_cache(
       );
 
       const jumlahPinjaman = Number(pinjaman.ajuanPinjaman);
-      const tenor = Number(pinjaman.waktuPengembalian);
+      // const tenor = Number(pinjaman.waktuPengembalian);
 
       // const totalHarusBayar = jumlahPinjaman + tenor * admin;
       const totalHarusBayar = jumlahPinjaman;

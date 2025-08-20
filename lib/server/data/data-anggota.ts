@@ -13,7 +13,7 @@ import { isUuidSchema, noAnggotaSchema } from "@/lib/schema/schema-helper";
 import { noPinjamanSchema } from "@/lib/schema/schema-pinjaman";
 import { TAnggota, TAnggotaUser } from "@/lib/types/anggota";
 import { RoleType } from "@/lib/types/helper";
-import { and, asc, count, eq, isNotNull, not, or } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, not } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 export const getNumberAll = unstable_cache(

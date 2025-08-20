@@ -25,6 +25,9 @@ export const LABEL = {
       DELETE: "Gagal menghapus data.",
     },
   },
+  SUCCESS: {
+    LOGIN: "Akses diterima",
+  },
   ERROR: {
     INVALID_FIELD: "Data yang dimasukkan tidak valid. Harap periksa kembali",
     DESCRIPTION:
