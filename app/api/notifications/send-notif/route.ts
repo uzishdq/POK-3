@@ -3,12 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { eq, and, isNotNull } from "drizzle-orm";
 import { notificationsTable } from "@/lib/db/schema";
-import { notifWa } from "@/lib/ruang-wa";
+import { cekNotifWa, notifWa } from "@/lib/ruang-wa";
 
 export async function GET(request: NextRequest) {
   const auth = request.headers.get("authorization");
+
   if (auth !== process.env.CRON_SECRET!) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const isActive = await cekNotifWa();
+
+  if (!isActive.ok) {
+    return NextResponse.json({ message: isActive.message }, { status: 400 });
   }
 
   try {

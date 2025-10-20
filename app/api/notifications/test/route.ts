@@ -1,13 +1,11 @@
 import { cekNotifWa } from "@/lib/ruang-wa";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const notif = await cekNotifWa();
 
-    console.log(notif);
-
-    return NextResponse.json({ message: "Berhasil " });
+    return NextResponse.json(notif);
   } catch (error) {
     console.log("error: ", error);
     return NextResponse.json(
