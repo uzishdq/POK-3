@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { notifAnggotaAll } from "@/lib/server/action/action-notifikasi";
 import { toast } from "sonner";
+import { cekNotifWa } from "@/lib/ruang-wa";
 
 function BulkNotifForm() {
   const [isPending, startTranssition] = React.useTransition();
@@ -42,6 +43,16 @@ function BulkNotifForm() {
           toast.error(data.message);
         }
       });
+    });
+  };
+
+  const onTest = async () => {
+    cekNotifWa().then((data) => {
+      if (data.ok) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
     });
   };
 
@@ -88,12 +99,15 @@ function BulkNotifForm() {
             />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? "Loading..." : "Kirim"}
             </Button>
           </DialogFooter>
         </form>
       </Form>
+      <Button variant="secondary" onClick={onTest}>
+        Test
+      </Button>
     </FormModal>
   );
 }

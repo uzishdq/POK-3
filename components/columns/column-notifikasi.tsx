@@ -49,7 +49,7 @@ export const columnNotifikasi: ColumnDef<TGetNotifikasi>[] = [
       return <div className="capitalize">{formattedString}</div>;
     },
   },
-      {
+  {
     accessorKey: "tanggalNotification",
     enableHiding: false,
     header: ({ column }) => {
@@ -64,7 +64,9 @@ export const columnNotifikasi: ColumnDef<TGetNotifikasi>[] = [
       );
     },
     cell: ({ row }) => {
-      const formattedDate = formatDatebyMonth(row.getValue("tanggalNotification"));
+      const formattedDate = formatDatebyMonth(
+        row.getValue("tanggalNotification")
+      );
       return <div className="capitalize">{formattedDate}</div>;
     },
   },
@@ -94,7 +96,7 @@ export const columnNotifikasi: ColumnDef<TGetNotifikasi>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-                        <DropdownMenuLabel className="text-center">
+            <DropdownMenuLabel className="text-center">
               Actions
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
