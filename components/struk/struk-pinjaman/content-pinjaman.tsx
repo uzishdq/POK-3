@@ -67,7 +67,7 @@ export default function ContentPinjaman({ data }: IContentPinjaman) {
   ];
   return (
     <>
-      <div className="print-a4 w-[210mm] min-h-[297mm] p-8 bg-white text-black font-serif">
+      <div className="print-a4 w-[210mm] min-h-[297mm] p-2 bg-white text-black font-serif">
         <StrukHeader />
 
         <p className="text-end">No: {data.noPinjaman}</p>
@@ -114,9 +114,9 @@ export default function ContentPinjaman({ data }: IContentPinjaman) {
           <p className="font-bold">{data.namaAnggota}</p>
         </div>
 
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col gap-1">
           <div className="grid w-full grid-cols-3 px-8">
-            <div className="col-span-2 flex flex-col justify-center gap-2 border border-r-0 border-black p-2">
+            <div className="col-span-2 flex flex-col justify-center gap-1 border border-r-0 border-black p-2">
               <b>NOTA PERSETUJUAN</b>
               <p>
                 Atas pengajuan pinjaman tersebut, disetujui pinjaman sebesar:{" "}

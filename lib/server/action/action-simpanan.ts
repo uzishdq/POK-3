@@ -605,102 +605,81 @@ export const pembagianSimpanan = async (
       };
     }
 
-    const [update] = await db
-      .update(settingPendaftaranSimpananTable)
-      .set({
-        basilSimpanan: validateValues.data.basil,
-        tanggalPembagian: validateValues.data.tanggalPembagian,
-        statusPendaftaranSimpanan: "CLOSE",
-        updatedAt: new Date().toISOString(),
-      })
-      .where(
-        eq(
-          settingPendaftaranSimpananTable.idSettingPendaftaran,
-          validateValues.data.id
+    const result = await db.transaction(async (tx) => {
+      const [update] = await tx
+        .update(settingPendaftaranSimpananTable)
+        .set({
+          basilSimpanan: validateValues.data.basil,
+          tanggalPembagian: validateValues.data.tanggalPembagian,
+          statusPendaftaranSimpanan: "CLOSE",
+          updatedAt: new Date().toISOString(),
+        })
+        .where(
+          eq(
+            settingPendaftaranSimpananTable.idSettingPendaftaran,
+            validateValues.data.id
+          )
         )
-      )
-      .returning();
+        .returning();
 
-    console.log(update);
+      // Insert detail pembagian simpanan (jika ada)
+      if (detailDataSimpanan.data.detailPembagianSimpanan.length > 0) {
+        for (const chunk of chunkArray(
+          detailDataSimpanan.data.detailPembagianSimpanan,
+          100
+        )) {
+          await tx
+            .insert(detailPembagianSimpananTable)
+            .values(chunk)
+            .onConflictDoNothing();
+        }
+      }
 
-    return {
-      ok: false,
-      message: LABEL.ERROR.SERVER,
-    };
+      // Insert pengambilan simpanan (jika ada)
+      if (detailDataSimpanan.data.pengambilanSimpanan.length > 0) {
+        for (const chunk of chunkArray(
+          detailDataSimpanan.data.pengambilanSimpanan,
+          100
+        )) {
+          await tx
+            .insert(pengambilanSimpananTable)
+            .values(chunk)
+            .onConflictDoNothing();
+        }
+      }
 
-    // const result = await db.transaction(async (tx) => {
-    //   const [update] = await tx
-    //     .update(settingPendaftaranSimpananTable)
-    //     .set({
-    //       basilSimpanan: validateValues.data.basil,
-    //       tanggalPembagian: validateValues.data.tanggalPembagian,
-    //       statusPendaftaranSimpanan: "CLOSE",
-    //       updatedAt: new Date().toISOString(),
-    //     })
-    //     .where(
-    //       eq(
-    //         settingPendaftaranSimpananTable.idSettingPendaftaran,
-    //         validateValues.data.id
-    //       )
-    //     )
-    //     .returning();
-    //   // Insert detail pembagian simpanan (jika ada)
-    //   if (detailDataSimpanan.data.detailPembagianSimpanan.length > 0) {
-    //     for (const chunk of chunkArray(
-    //       detailDataSimpanan.data.detailPembagianSimpanan,
-    //       100
-    //     )) {
-    //       await tx
-    //         .insert(detailPembagianSimpananTable)
-    //         .values(chunk)
-    //         .onConflictDoNothing();
-    //     }
-    //   }
+      return update;
+    });
 
-    //   // Insert pengambilan simpanan (jika ada)
-    //   if (detailDataSimpanan.data.pengambilanSimpanan.length > 0) {
-    //     for (const chunk of chunkArray(
-    //       detailDataSimpanan.data.pengambilanSimpanan,
-    //       100
-    //     )) {
-    //       await tx
-    //         .insert(pengambilanSimpananTable)
-    //         .values(chunk)
-    //         .onConflictDoNothing();
-    //     }
-    //   }
-    //   return update;
-    // });
+    if (!result) {
+      return {
+        ok: false,
+        message: "pembagian pinjaman gagal",
+      };
+    } else {
+      await notifPembagianSimpanan({
+        idSettingPendaftaran: result.idSettingPendaftaran,
+        namaPendaftaran: result.namaPendaftaran,
+        jenisPengambilanSimpanan: result.jenisPendaftaranSimpanan,
+      });
 
-    // if (!result) {
-    //   return {
-    //     ok: false,
-    //     message: "pembagian pinjaman gagal",
-    //   };
-    // } else {
-    //   await notifPembagianSimpanan({
-    //     idSettingPendaftaran: result.idSettingPendaftaran,
-    //     namaPendaftaran: result.namaPendaftaran,
-    //     jenisPengambilanSimpanan: result.jenisPendaftaranSimpanan,
-    //   });
+      const tagsToRevalidate = Array.from(
+        new Set([
+          ...tagsSimpananRevalidate,
+          ...tagsPendaftaranSimpananRevalidate,
+          ...tagsPengambilanSimpananRevalidate,
+          ...tagsPotonganRevalidate,
+          ...tagsNotifikasiRevalidate,
+        ])
+      );
 
-    //   const tagsToRevalidate = Array.from(
-    //     new Set([
-    //       ...tagsSimpananRevalidate,
-    //       ...tagsPendaftaranSimpananRevalidate,
-    //       ...tagsPengambilanSimpananRevalidate,
-    //       ...tagsPotonganRevalidate,
-    //       ...tagsNotifikasiRevalidate,
-    //     ])
-    //   );
+      tagsToRevalidate.forEach((tag) => revalidateTag(tag));
 
-    //   tagsToRevalidate.forEach((tag) => revalidateTag(tag));
-
-    //   return {
-    //     ok: true,
-    //     message: "pembagian pinjaman berhasil",
-    //   };
-    // }
+      return {
+        ok: true,
+        message: "pembagian pinjaman berhasil",
+      };
+    }
   } catch (error) {
     console.error("error pembagian simpanan : ", error);
     return {

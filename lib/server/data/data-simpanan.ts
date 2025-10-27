@@ -265,7 +265,7 @@ export const getSumSimpananBerjangka = async (
   try {
     const result = await getPendaftarSimpanan(jenis);
 
-    if (result.data === null) {
+    if (!result.data) {
       return {
         nama: "none",
         total: 0,

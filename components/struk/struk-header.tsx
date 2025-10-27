@@ -10,9 +10,9 @@ export default function StrukHeader() {
           <Image src={PICTURES.LOGO_STRUK} alt="logo" fill />
         </div>
       </div>
-      <div className="col-span-2 flex flex-col place-items-center justify-center gap-1 self-center text-center text-green-600">
-        <p className="text-2xl font-bold">KKGM</p>
-        <p className="text-2xl font-bold">YAYASAN AL GHIFARI</p>
+      <div className="col-span-2 flex flex-col place-items-center justify-center gap-0.5 self-center text-center text-green-600">
+        <p className="text-3xl font-bold">KKGM</p>
+        <p className="text-3xl font-bold">YAYASAN AL GHIFARI</p>
         <p className="text-sm font-bold">
           Badan Hukum No. 518/PAD.47 - Diskop/2003
         </p>
