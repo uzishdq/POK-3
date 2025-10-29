@@ -172,7 +172,7 @@ function UnitKerjaUpdateForm({ values }: UnitKerjaFormProps) {
           />
         </div>
         <DialogFooter>
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Loading..." : "Update"}
           </Button>
         </DialogFooter>
@@ -245,7 +245,12 @@ function UnitKerjaDeleteForm({ values }: UnitKerjaFormProps) {
           />
         </div>
         <DialogFooter>
-          <Button type="submit" variant="destructive" disabled={isPending}>
+          <Button
+            type="submit"
+            className="w-full"
+            variant="destructive"
+            disabled={isPending}
+          >
             {isPending ? "Loading..." : "Delete"}
           </Button>
         </DialogFooter>

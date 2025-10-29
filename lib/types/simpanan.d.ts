@@ -1,4 +1,3 @@
-import { JENIS_SIMPANAN } from "../constan";
 import {
   JenisPendaftaranSimpananType,
   JenisSimpananType,

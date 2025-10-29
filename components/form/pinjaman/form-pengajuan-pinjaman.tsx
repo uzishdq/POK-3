@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React from "react";
 import * as z from "zod";
@@ -287,8 +288,8 @@ export default function FormPengajuanPinjaman({
               {isPending
                 ? "Loading..."
                 : isValid
-                ? "Ajukan Pengajuan Pinjaman"
-                : "Cek Pengajuan Pinjaman"}
+                  ? "Ajukan Pengajuan Pinjaman"
+                  : "Cek Pengajuan Pinjaman"}
             </Button>
           </form>
         </Form>

@@ -13,6 +13,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  CustomTooltipProps,
 } from "../ui/chart";
 import { TrendingUp } from "lucide-react";
 import { formatToIDR } from "@/lib/helper";
@@ -86,7 +87,11 @@ export default function ChartPinjaman({ produktif, barang }: IChartPinjaman) {
                 className="[&_.recharts-pie-label-text]:fill-foreground w-full max-w-md mx-auto max-h-[250px]"
               >
                 <PieChart>
-                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                  <ChartTooltip
+                    content={(props: CustomTooltipProps) => (
+                      <ChartTooltipContent {...props} hideIndicator hideLabel />
+                    )}
+                  />
                   <Pie
                     data={chartDataProduktif}
                     dataKey="jumlah"
@@ -143,7 +148,11 @@ export default function ChartPinjaman({ produktif, barang }: IChartPinjaman) {
                 className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0"
               >
                 <PieChart>
-                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                  <ChartTooltip
+                    content={(props: CustomTooltipProps) => (
+                      <ChartTooltipContent {...props} hideIndicator hideLabel />
+                    )}
+                  />
                   <Pie
                     data={chartDataBarang}
                     dataKey="jumlah"

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
 import * as z from "zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -126,28 +128,6 @@ export default function InputExcell() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-4">
-              {/* <FormField
-                control={form.control}
-                name="file"
-                render={({ field: { value, ...fieldValues } }) => (
-                  <FormItem>
-                    <FormLabel>File Potongan Gaji</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...fieldValues}
-                        type="file"
-                        accept=".xlsx, .xls,"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          fieldValues.onChange(file);
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                    <FormDescription>.xlsx / .xls & maks 5MB</FormDescription>
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={form.control}
                 name="file"

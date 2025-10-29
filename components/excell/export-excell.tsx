@@ -37,6 +37,7 @@ export default function ExportExcell<T>({
     const worksheet = workbook.addWorksheet("Sheet 1");
 
     // Merge & Title
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const titleRow = worksheet.addRow([]);
     worksheet.mergeCells(1, 1, 1, columns.length);
     const titleCell = worksheet.getCell(1, 1);
@@ -50,6 +51,7 @@ export default function ExportExcell<T>({
     headerRow.alignment = { horizontal: "center" };
 
     // Data
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data.forEach((item) => {
       const rowValues = columns.map((col) => {
         // Akses properti nested dengan `eval`

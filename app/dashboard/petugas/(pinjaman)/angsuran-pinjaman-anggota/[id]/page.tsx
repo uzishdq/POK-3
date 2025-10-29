@@ -9,7 +9,7 @@ import React from "react";
 export default async function AngsuranPinjamanAnggota({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 

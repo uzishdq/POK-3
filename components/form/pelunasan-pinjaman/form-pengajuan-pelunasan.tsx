@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import * as z from "zod";
@@ -6,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TValidasiPelunasanData } from "@/lib/types/pelunasan-pinjaman";
 import { createPelunasanPinjaman } from "@/lib/schema/schema-pelunasan";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CardDetailPelunasanPinjaman from "@/components/card/card-detail-pelunasan-pinjaman";
 import {
   Form,

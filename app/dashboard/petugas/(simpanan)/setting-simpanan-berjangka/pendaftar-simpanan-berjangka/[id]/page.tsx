@@ -15,7 +15,7 @@ import { validate as isUuid } from "uuid";
 export default async function PendaftarSimpananBerjangka({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 

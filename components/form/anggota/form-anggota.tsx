@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ROLE, STATUS_ANGGOTA } from "@/lib/constan";
-import { Input } from "@/components/ui/input";
 import { updateAnggota } from "@/lib/server/action/action-anggota";
 
 interface FormAnggota {
@@ -120,7 +119,7 @@ function FormUpdateAnggota({ values }: FormAnggota) {
           />
         </div>
         <DialogFooter>
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? "Loading..." : "Update"}
           </Button>
         </DialogFooter>

@@ -2,16 +2,9 @@
 
 import * as z from "zod";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   TPelunasan,
-  TValidasiPelunasan,
   TValidasiPelunasanData,
 } from "@/lib/types/pelunasan-pinjaman";
 import FormStatus from "../form-status";
@@ -36,7 +29,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { validasiPelunasan } from "@/lib/server/action/action-pelunasan";
 import { toast } from "sonner";
-import CardDetailPelunasanPinjaman from "@/components/card/card-detail-pelunasan-pinjaman";
 import FormPengajuanPelunasan from "./form-pengajuan-pelunasan";
 
 interface IFormCekPelunasan {

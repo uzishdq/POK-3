@@ -12,11 +12,10 @@ import { TChartPinjaman } from "@/lib/types/pinjaman";
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
   ChartTooltip,
   ChartTooltipContent,
+  CustomTooltipProps,
 } from "../ui/chart";
-import { TrendingUp } from "lucide-react";
 import { formatDatebyMonth } from "@/lib/helper";
 
 interface IChartPinjamanPetugas {
@@ -117,7 +116,11 @@ export default function ChartPinjamanPetugas({ data }: IChartPinjamanPetugas) {
               className="[&_.recharts-pie-label-text]:fill-foreground w-full max-w-md mx-auto max-h-[250px]"
             >
               <PieChart>
-                <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                <ChartTooltip
+                  content={(props: CustomTooltipProps) => (
+                    <ChartTooltipContent {...props} hideIndicator hideLabel />
+                  )}
+                />
                 <Pie
                   data={chartDataProduktif}
                   dataKey="jumlah"
@@ -173,7 +176,11 @@ export default function ChartPinjamanPetugas({ data }: IChartPinjamanPetugas) {
               className="[&_.recharts-pie-label-text]:fill-foreground w-full max-w-md mx-auto max-h-[250px]"
             >
               <PieChart>
-                <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                <ChartTooltip
+                  content={(props: CustomTooltipProps) => (
+                    <ChartTooltipContent {...props} hideIndicator hideLabel />
+                  )}
+                />
                 <Pie
                   data={chartDataBarang}
                   dataKey="jumlah"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { TAnggota } from "@/lib/types/anggota";
 import { TJabatan } from "@/lib/types/jabatan";

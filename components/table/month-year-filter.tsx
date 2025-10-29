@@ -24,10 +24,8 @@ export default function MonthYearFilter<T>({
   const [filterMonth, setFilterMonth] = React.useState<string | undefined>(
     undefined
   );
+
   const [filterYear, setFilterYear] = React.useState<string | undefined>(
-    undefined
-  );
-  const [foundMoth, setFoundMoth] = React.useState<string | undefined>(
     undefined
   );
 

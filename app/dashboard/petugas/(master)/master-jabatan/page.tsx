@@ -1,5 +1,4 @@
 import { columnJabatan } from "@/components/columns/column-jabatan";
-import FormStatus from "@/components/form/form-status";
 import { JabatanForm } from "@/components/form/jabatan/jabatan-form";
 import TableWrapper from "@/components/table/table-wrapper";
 import { RenderError } from "@/components/ui/render-error";

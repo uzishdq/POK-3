@@ -23,7 +23,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 
 function judulPesan(pesan: string): string | null {

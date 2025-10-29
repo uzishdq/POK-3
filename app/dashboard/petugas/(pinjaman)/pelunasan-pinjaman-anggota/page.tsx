@@ -15,22 +15,19 @@ export default async function PelunasanPinjamanAnggota() {
     return RenderError("Pelunasan Pinjaman Anggota", LABEL.ERROR.DESCRIPTION);
   }
 
-  const { approvedPelunasan, pendingPelunasan, completedPelunasan } =
+  const { approvedPelunasan, pendingPelunasan } =
     pelunasan.data?.reduce(
       (acc, item) => {
         if (item.statusPelunasanPinjaman === "APPROVED") {
           acc.approvedPelunasan.push(item);
         } else if (item.statusPelunasanPinjaman === "PENDING") {
           acc.pendingPelunasan.push(item);
-        } else if (item.statusPelunasanPinjaman === "COMPLETED") {
-          acc.completedPelunasan.push(item);
         }
         return acc;
       },
       {
         approvedPelunasan: [] as TPelunasanPinjaman[],
         pendingPelunasan: [] as TPelunasanPinjaman[],
-        completedPelunasan: [] as TPelunasanPinjaman[],
       }
     ) || {};
 

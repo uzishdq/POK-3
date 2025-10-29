@@ -5,6 +5,7 @@ import { NumericFormat } from "react-number-format";
 
 type TInputCurrencyProps = {
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any, any> | undefined;
 };
 

@@ -4,7 +4,6 @@ import {
 } from "@/components/columns/column-potongan-gaji";
 import ExportExcell from "@/components/excell/export-excell";
 import InputExcell from "@/components/excell/input-excell";
-import FormStatus from "@/components/form/form-status";
 import TableDateWrapper from "@/components/table/table-date-wrapper";
 import TableWrapper from "@/components/table/table-wrapper";
 import { RenderError } from "@/components/ui/render-error";

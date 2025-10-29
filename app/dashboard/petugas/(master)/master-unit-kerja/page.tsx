@@ -1,5 +1,4 @@
 import { columnUnitKerja } from "@/components/columns/column-unit-kerja";
-import FormStatus from "@/components/form/form-status";
 import { UnitKerjaForm } from "@/components/form/unit-kerja/unit-kerja-form";
 import TableWrapper from "@/components/table/table-wrapper";
 import { RenderError } from "@/components/ui/render-error";

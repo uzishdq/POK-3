@@ -154,7 +154,7 @@ function DialogDetail({ value }: TDialog) {
           Detail
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Detail Anggota Koperasi</DialogTitle>
           <DialogDescription>
@@ -171,13 +171,13 @@ function DialogDetail({ value }: TDialog) {
               <div className="text-base font-medium">{value.noAnggota}</div>
             </div>
             <div>
-              <Label className="text-sm text-muted-foreground">Username</Label>
-              <div className="text-base font-medium">{value.username}</div>
+              <Label className="text-sm text-muted-foreground">Nama</Label>
+              <div className="text-base font-medium">{value.namaAnggota}</div>
             </div>
           </div>
           <div>
-            <Label className="text-sm text-muted-foreground">Nama</Label>
-            <div className="text-base font-medium">{value.namaAnggota}</div>
+            <Label className="text-sm text-muted-foreground">Username</Label>
+            <div className="text-base font-medium">{value.username}</div>
           </div>
           <div>
             <Label className="text-sm text-muted-foreground">Unit Kerja</Label>
@@ -197,20 +197,22 @@ function DialogDetail({ value }: TDialog) {
               <div className="text-base font-medium">{value.noTelpAnggota}</div>
             </div>
           </div>
-          <div>
-            <Label className="text-sm text-muted-foreground">
-              Bank / Rekening
-            </Label>
-            <div className="text-base font-medium">
-              {value.bankAnggota} / {value.rekeningAnggota}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-sm text-muted-foreground">
+                Bank / Rekening
+              </Label>
+              <div className="text-base font-medium">
+                {value.bankAnggota} / {value.rekeningAnggota}
+              </div>
             </div>
-          </div>
-          <div>
-            <Label className="text-sm text-muted-foreground">Sukamana</Label>
-            <div className="text-base font-medium">
-              {formatToIDR(
-                value.pilihanSukamana ? Number(value.pilihanSukamana) : null
-              )}
+            <div>
+              <Label className="text-sm text-muted-foreground">Sukamana</Label>
+              <div className="text-base font-medium">
+                {formatToIDR(
+                  value.pilihanSukamana ? Number(value.pilihanSukamana) : null
+                )}
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -226,7 +228,9 @@ function DialogDetail({ value }: TDialog) {
         </div>
         <DialogFooter>
           <DialogTrigger asChild>
-            <Button variant="secondary">Kembali</Button>
+            <Button variant="secondary" className="w-full">
+              Kembali
+            </Button>
           </DialogTrigger>
         </DialogFooter>
       </DialogContent>

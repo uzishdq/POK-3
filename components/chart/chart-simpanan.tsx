@@ -9,6 +9,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  CustomTooltipProps,
 } from "../ui/chart";
 
 interface IChartSimpanan {
@@ -92,7 +93,9 @@ export default function ChartSimpanan({ data }: IChartSimpanan) {
             <XAxis dataKey="jumlah" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={(props: CustomTooltipProps) => (
+                <ChartTooltipContent {...props} hideIndicator hideLabel />
+              )}
             />
             <Bar dataKey="jumlah" radius={5} />
           </BarChart>

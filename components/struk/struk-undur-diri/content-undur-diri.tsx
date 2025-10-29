@@ -1,9 +1,4 @@
-import {
-  capitalizeFirst,
-  formatDatebyMonth,
-  formatToIDR,
-  toTerbilang,
-} from "@/lib/helper";
+import { capitalizeFirst, formatDatebyMonth, formatToIDR } from "@/lib/helper";
 import React from "react";
 import StrukHeader from "../struk-header";
 import { TSuratUndurDiri } from "@/lib/types/undur-diri";

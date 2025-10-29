@@ -45,6 +45,7 @@ export const refreshData = async () => {
     } else {
       return { ok: false, message: "Refresh Data Gagal" };
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return { ok: false, message: "Refresh Data Gagal" };
   }

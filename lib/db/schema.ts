@@ -7,6 +7,7 @@ import {
   pgTable,
   serial,
   text,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unique,
   uuid,
   varchar,

@@ -10,12 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis } from "recharts";
-import { TMaxPengambilan, TSumSimpananAnggota } from "@/lib/types/simpanan";
+import { TSumSimpananAnggota } from "@/lib/types/simpanan";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  CustomTooltipProps,
 } from "../ui/chart";
 import { formatDatebyMonth, formatToIDR } from "@/lib/helper";
 
@@ -110,7 +111,9 @@ export default function ChartSimpananPetugas({ data }: IChartSimpananPetugas) {
             <XAxis dataKey="jumlah" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={(props: CustomTooltipProps) => (
+                <ChartTooltipContent {...props} hideIndicator hideLabel />
+              )}
             />
             <Bar dataKey="jumlah" radius={5} />
           </BarChart>

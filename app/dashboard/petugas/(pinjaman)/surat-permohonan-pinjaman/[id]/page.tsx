@@ -10,7 +10,7 @@ import React from "react";
 export default async function SuratPermohonanPinjaman({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 

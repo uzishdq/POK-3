@@ -10,7 +10,7 @@ import { ContentStrukSimpananBerjangka } from "@/components/struk/struk-simpanan
 export default async function StrukSimpananBerjangka({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 

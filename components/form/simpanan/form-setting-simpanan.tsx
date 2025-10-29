@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React from "react";
 import * as z from "zod";
@@ -490,6 +491,7 @@ function FormPembagianSimpanan({
       // Jika gagal validasi, trigger error di form
       parsed.error.issues.forEach((issue) => {
         const fieldName = issue.path[0];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         form.setError(fieldName as any, { message: issue.message });
       });
       return;

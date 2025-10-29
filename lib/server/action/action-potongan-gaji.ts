@@ -2,23 +2,13 @@
 
 import {
   chunkArray,
-  formatFieldValidation,
   generateIdAngsuran,
   generateIdSimpanan,
-  parseExcelRow,
   setPotonganGaji,
 } from "@/lib/helper";
-import {
-  InputPotongGajiSchema,
-  RowsValidationSchema,
-  RowValidationSchema,
-} from "@/lib/schema/schema-potong-gaji";
+import { RowsValidationSchema } from "@/lib/schema/schema-potong-gaji";
 import { JenisSimpananType } from "@/lib/types/helper";
-import {
-  TInputSimpanan,
-  TPotongGaji,
-  typeTInputAngsuran,
-} from "@/lib/types/potong-gaji";
+import { TInputSimpanan, typeTInputAngsuran } from "@/lib/types/potong-gaji";
 import { z } from "zod";
 import { getLastIdSimpanan } from "../data/data-simpanan";
 import {
@@ -39,7 +29,7 @@ import {
   templatePotonganGajiAngsuran,
   templatePotonganGajiSimpanan,
 } from "@/lib/template-notif";
-import { eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import {
   LABEL,
   tagsNotifikasiRevalidate,
