@@ -42,7 +42,6 @@ function ResetPasswordAnggotaForm() {
 
   const onSubmit = (values: z.infer<typeof ResetPasswordAnggotaSchema>) => {
     startTranssition(() => {
-      console.log(values);
       ResetPasswordAnggota(values).then((data) => {
         if (data.ok) {
           form.reset();
@@ -155,7 +154,6 @@ function ResetUsernameAnggotaForm() {
 
   const onSubmit = (values: z.infer<typeof ResetUsernameAnggotaSchema>) => {
     startTranssition(() => {
-      console.log(values);
       ResetUsernameAnggota(values).then((data) => {
         if (data.ok) {
           form.reset();

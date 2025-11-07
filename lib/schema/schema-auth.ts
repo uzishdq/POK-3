@@ -51,7 +51,8 @@ export const ResetPasswordAnggotaSchema = z
     newPassword: password,
     newConfirmPassword: z
       .string({ required_error: "tidak boleh kosong" })
-      .min(6, "harus terdiri setidaknya 6 karakter"),
+      .min(6, "harus terdiri setidaknya 6 karakter")
+      .max(50, "paling banyak 50 karakter"),
   })
   .refine((data) => data.newPassword === data.newConfirmPassword, {
     message: "password tidak sama !",
