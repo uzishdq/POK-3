@@ -19,7 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { ArrowUpDown, FileDown, ListCollapse, MoreHorizontal, Pencil } from "lucide-react";
+import {
+  ArrowUpDown,
+  FileDown,
+  ListCollapse,
+  MoreHorizontal,
+  Pencil,
+} from "lucide-react";
 import Link from "next/link";
 import {
   Dialog,
@@ -59,7 +65,7 @@ export const columnSimpananUser: ColumnDef<TSimpananUser>[] = [
       <div className="capitalize">{row.getValue("noAnggota")}</div>
     ),
   },
-      {
+  {
     accessorKey: "tanggalSimpanan",
     enableHiding: false,
     header: ({ column }) => {
@@ -120,25 +126,27 @@ export const columnPengambilanSimpananUser: ColumnDef<TPengambilanSimpananById>[
         <div className="capitalize">{row.getValue("noAnggota")}</div>
       ),
     },
-        {
-        accessorKey: "tanggalPengambilanSimpanan",
-        enableHiding: false,
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Tanggal
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
-        cell: ({ row }) => {
-          const formattedDate = formatDatebyMonth(row.getValue("tanggalPengambilanSimpanan"));
-          return <div className="capitalize">{formattedDate}</div>;
-        },
+    {
+      accessorKey: "tanggalPengambilanSimpanan",
+      enableHiding: false,
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Tanggal
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
       },
+      cell: ({ row }) => {
+        const formattedDate = formatDatebyMonth(
+          row.getValue("tanggalPengambilanSimpanan")
+        );
+        return <div className="capitalize">{formattedDate}</div>;
+      },
+    },
     {
       accessorKey: "jenisPengambilanSimpanan",
       header: "Jenis",
@@ -210,25 +218,27 @@ export const columnPengambilanSimpananPetugas: ColumnDef<TPengambilanSimpanan>[]
         <div className="capitalize">{row.getValue("namaUnitKerja")}</div>
       ),
     },
-        {
-        accessorKey: "tanggalPengambilanSimpanan",
-        enableHiding: false,
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Tanggal
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
-        cell: ({ row }) => {
-          const formattedDate = formatDatebyMonth(row.getValue("tanggalPengambilanSimpanan"));
-          return <div className="capitalize">{formattedDate}</div>;
-        },
+    {
+      accessorKey: "tanggalPengambilanSimpanan",
+      enableHiding: false,
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Tanggal
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
       },
+      cell: ({ row }) => {
+        const formattedDate = formatDatebyMonth(
+          row.getValue("tanggalPengambilanSimpanan")
+        );
+        return <div className="capitalize">{formattedDate}</div>;
+      },
+    },
     {
       accessorKey: "jenisPengambilanSimpanan",
       header: "Jenis",
@@ -443,7 +453,7 @@ export const columnSimpananBerjangka: ColumnDef<TSimpananBerjangka>[] = [
       <div className="capitalize">{row.getValue("namaPendaftaran")}</div>
     ),
   },
-    {
+  {
     accessorKey: "tanggalPendaftaran",
     enableHiding: false,
     header: ({ column }) => {
@@ -458,7 +468,9 @@ export const columnSimpananBerjangka: ColumnDef<TSimpananBerjangka>[] = [
       );
     },
     cell: ({ row }) => {
-      const formattedDate = formatDatebyMonth(row.getValue("tanggalPendaftaran"));
+      const formattedDate = formatDatebyMonth(
+        row.getValue("tanggalPendaftaran")
+      );
       return <div className="capitalize">{formattedDate}</div>;
     },
   },

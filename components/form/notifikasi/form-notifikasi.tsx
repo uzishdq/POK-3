@@ -23,6 +23,7 @@ import { cekNotifWa } from "@/lib/ruang-wa";
 
 function BulkNotifForm() {
   const [isPending, startTranssition] = React.useTransition();
+  const [test, setTest] = React.useState(false);
 
   const form = useForm<z.infer<typeof BulkNotifFormSchema>>({
     resolver: zodResolver(BulkNotifFormSchema),
@@ -47,12 +48,14 @@ function BulkNotifForm() {
   };
 
   const onTest = async () => {
+    setTest(true);
     cekNotifWa().then((data) => {
       if (data.ok) {
         toast.success(data.message);
       } else {
         toast.error(data.message);
       }
+      setTest(false);
     });
   };
 
@@ -105,8 +108,8 @@ function BulkNotifForm() {
           </DialogFooter>
         </form>
       </Form>
-      <Button variant="secondary" onClick={onTest}>
-        Test
+      <Button variant="secondary" disabled={test} onClick={onTest}>
+        {test ? "Loading..." : "Test"}
       </Button>
     </FormModal>
   );

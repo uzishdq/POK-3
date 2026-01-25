@@ -71,7 +71,7 @@ export const validatedStringSchema = (min = 5, max = 50) =>
     .max(max, `maksimal ${max} karakter`)
     .regex(
       allowedRegex,
-      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash"
+      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash",
     );
 
 export const basilSchema = z
@@ -84,7 +84,7 @@ export const basilSchema = z
     },
     {
       message: "Masukkan angka valid antara 0.1 dan 100 tanpa nol di depan",
-    }
+    },
   )
   .refine(
     (val) => {
@@ -93,7 +93,7 @@ export const basilSchema = z
     },
     {
       message: "Persentase harus antara 0.1% dan 100%",
-    }
+    },
   );
 
 export const validatedNamaPendaftaranSchema = (min = 5, max = 50) =>
@@ -103,7 +103,7 @@ export const validatedNamaPendaftaranSchema = (min = 5, max = 50) =>
     .max(max, `maksimal ${max} karakter`)
     .regex(
       allowedRegex,
-      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash"
+      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash",
     )
     .refine((val) => val.toLowerCase().includes("tabungan"), {
       message: 'Harus mengandung kata "tabungan"',
@@ -132,8 +132,8 @@ export const validatedSukamana = z
     invalid_type_error: "harus angka",
     required_error: "harus angka",
   })
-  .refine((n) => (n >= 15000 && n <= 750000) || n === 0, {
-    message: "simpanan sukamana hanya di antara Rp 15.000 dan Rp 750.000",
+  .refine((n) => (n >= 15000 && n <= 10000000) || n === 0, {
+    message: "simpanan sukamana hanya di antara Rp 15.000 dan Rp 10.000.000",
   })
   .optional();
 
@@ -150,15 +150,15 @@ export const validatedJumlah = (min = 0, max = 50000000) =>
       },
       {
         message: `jumlah hanya di antara ${formatToIDR(min)} dan ${formatToIDR(
-          max
+          max,
         )}`,
-      }
+      },
     );
 
 export const validatedPengambilanJumlah = (
   min = 50000,
   max = 50000000,
-  type: string
+  type: string,
 ) =>
   z
     .number({
@@ -174,19 +174,19 @@ export const validatedPengambilanJumlah = (
         message:
           max === 0
             ? `maaf anda tidak dapat melakukan penarikan simpanan ${type} karena saldo anda ${formatToIDR(
-                max
+                max,
               )}`
             : max <= 50000
-            ? `maaf anda tidak dapat melakukan penarikan simpanan ${type} karena saldo anda ${formatToIDR(
-                max
-              )} atau kurang dari Rp 50.000, coba jenis simpanan yang lain.`
-            : `jumlah minimal penarikan simpanan ${type} Rp 50.000 dan maksimal ${formatToIDR(
-                max
-              )}`,
-      }
+              ? `maaf anda tidak dapat melakukan penarikan simpanan ${type} karena saldo anda ${formatToIDR(
+                  max,
+                )} atau kurang dari Rp 50.000, coba jenis simpanan yang lain.`
+              : `jumlah minimal penarikan simpanan ${type} Rp 50.000 dan maksimal ${formatToIDR(
+                  max,
+                )}`,
+      },
     );
 
-export const validatedWaktuPinjaman = (min = 0, max = 60) =>
+export const validatedWaktuPinjaman = (min = 0, max = 120) =>
   z.number().refine(
     (n) => {
       const allowZero = min === 0;
@@ -194,7 +194,7 @@ export const validatedWaktuPinjaman = (min = 0, max = 60) =>
     },
     {
       message: `waktu hanya boleh antara ${min} dan ${max}, bulan`,
-    }
+    },
   );
 
 export const validatedSelectNumber = z

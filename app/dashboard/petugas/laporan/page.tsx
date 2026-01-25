@@ -27,9 +27,9 @@ import React from "react";
 
 export default async function Laporan({
   searchParams,
-}: {
+}: Readonly<{
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+}>) {
   const [setting, pinjaman] = await Promise.all([
     getSettingSimpanan(),
     getCountStatusPinjaman(),
@@ -38,7 +38,7 @@ export default async function Laporan({
   if (!setting.ok || !setting.data) {
     return RenderError(
       "Laporan Simpanan Berjangka & Pinjaman Anggota",
-      LABEL.ERROR.DESCRIPTION
+      LABEL.ERROR.DESCRIPTION,
     );
   }
 
@@ -54,7 +54,7 @@ export default async function Laporan({
   const statusPinjamanParams = value.statusPinjaman ?? "";
   const noPendaftaranParams = Array.isArray(value.noPendaftaran)
     ? value.noPendaftaran[0]
-    : value.noPendaftaran ?? "";
+    : (value.noPendaftaran ?? "");
 
   const isFiltered = Boolean(jenisPinjamanParams && statusPinjamanParams);
 
