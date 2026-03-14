@@ -82,8 +82,8 @@ export const getLastIdSimpanan = async () => {
       .where(
         and(
           eq(simpananTable.jenisSimpanan, type as JenisSimpananType),
-          like(simpananTable.noSimpanan, pattern)
-        )
+          like(simpananTable.noSimpanan, pattern),
+        ),
       )
       .orderBy(desc(simpananTable.noSimpanan))
       .limit(1)
@@ -117,10 +117,10 @@ export const getLastIdPengambilanSimpanan = async () => {
         and(
           eq(
             pengambilanSimpananTable.jenisPengambilanSimpanan,
-            type as JenisSimpananType
+            type as JenisSimpananType,
           ),
-          like(pengambilanSimpananTable.noPengambilanSimpanan, pattern)
-        )
+          like(pengambilanSimpananTable.noPengambilanSimpanan, pattern),
+        ),
       )
       .orderBy(desc(pengambilanSimpananTable.noPengambilanSimpanan))
       .limit(1)
@@ -156,7 +156,7 @@ export const getSettingSimpanan = unstable_cache(
   ["get-setting-simpanan"],
   {
     tags: ["get-setting-simpanan"],
-  }
+  },
 );
 
 export const getSettingSimpananById = unstable_cache(
@@ -183,7 +183,7 @@ export const getSettingSimpananById = unstable_cache(
   ["get-setting-simpanan-by-id"],
   {
     tags: ["get-setting-simpanan-by-id"],
-  }
+  },
 );
 
 export const getListPendaftarSimpanan = unstable_cache(
@@ -205,11 +205,11 @@ export const getListPendaftarSimpanan = unstable_cache(
         .from(pendaftaranSimpananTable)
         .leftJoin(
           anggotaTable,
-          eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota)
+          eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota),
         )
         .leftJoin(
           unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
         )
         .where(eq(pendaftaranSimpananTable.settingPendaftaranId, id));
 
@@ -226,7 +226,7 @@ export const getListPendaftarSimpanan = unstable_cache(
   ["get-list-pendaftar-simpanan"],
   {
     tags: ["get-list-pendaftar-simpanan"],
-  }
+  },
 );
 
 export const getPendaftarSimpanan = unstable_cache(
@@ -240,9 +240,9 @@ export const getPendaftarSimpanan = unstable_cache(
             eq(settingPendaftaranSimpananTable.jenisPendaftaranSimpanan, jenis),
             eq(
               settingPendaftaranSimpananTable.statusPendaftaranSimpanan,
-              "OPEN"
-            )
-          )
+              "OPEN",
+            ),
+          ),
         )
         .orderBy(desc(settingPendaftaranSimpananTable.createdAt))
         .limit(1);
@@ -256,11 +256,11 @@ export const getPendaftarSimpanan = unstable_cache(
   ["get-pendaftar-simpanan"],
   {
     tags: ["get-pendaftar-simpanan"],
-  }
+  },
 );
 
 export const getSumSimpananBerjangka = async (
-  jenis: JenisPendaftaranSimpananType
+  jenis: JenisPendaftaranSimpananType,
 ) => {
   try {
     const result = await getPendaftarSimpanan(jenis);
@@ -278,8 +278,8 @@ export const getSumSimpananBerjangka = async (
       .where(
         eq(
           pendaftaranSimpananTable.settingPendaftaranId,
-          result.data.idSettingPendaftaran
-        )
+          result.data.idSettingPendaftaran,
+        ),
       );
 
     return {
@@ -343,7 +343,7 @@ export const getCountSimpananBerjangka = unstable_cache(
   ["count-pendaftar-simpanan"],
   {
     tags: ["count-pendaftar-simpanan"],
-  }
+  },
 );
 
 export const getSimpanan = unstable_cache(
@@ -362,8 +362,8 @@ export const getSimpanan = unstable_cache(
         .where(
           and(
             eq(simpananTable.jenisSimpanan, jenis),
-            eq(simpananTable.noAnggota, id)
-          )
+            eq(simpananTable.noAnggota, id),
+          ),
         )
         .orderBy(desc(simpananTable.tanggalSimpanan));
 
@@ -380,7 +380,7 @@ export const getSimpanan = unstable_cache(
   ["get-simpanan"],
   {
     tags: ["get-simpanan"],
-  }
+  },
 );
 
 export const getSimpananBerjangka = unstable_cache(
@@ -397,7 +397,7 @@ export const getSimpananBerjangka = unstable_cache(
         .select()
         .from(settingPendaftaranSimpananTable)
         .where(
-          eq(settingPendaftaranSimpananTable.jenisPendaftaranSimpanan, jenis)
+          eq(settingPendaftaranSimpananTable.jenisPendaftaranSimpanan, jenis),
         )
         .orderBy(desc(settingPendaftaranSimpananTable.createdAt))
         .limit(1);
@@ -412,7 +412,7 @@ export const getSimpananBerjangka = unstable_cache(
       if (
         !isRangeDate(
           berjangka.tanggalAwalSimpanan,
-          berjangka.tanggalAkhirSimpanan
+          berjangka.tanggalAkhirSimpanan,
         )
       ) {
         return {
@@ -429,8 +429,8 @@ export const getSimpananBerjangka = unstable_cache(
             eq(simpananTable.jenisSimpanan, jenis),
             eq(simpananTable.noAnggota, id),
             gte(simpananTable.tanggalSimpanan, berjangka.tanggalAwalSimpanan),
-            lte(simpananTable.tanggalSimpanan, berjangka.tanggalAkhirSimpanan)
-          )
+            lte(simpananTable.tanggalSimpanan, berjangka.tanggalAkhirSimpanan),
+          ),
         )
         .orderBy(desc(simpananTable.tanggalSimpanan));
 
@@ -447,7 +447,7 @@ export const getSimpananBerjangka = unstable_cache(
   ["get-simpanan-berjangka"],
   {
     tags: ["get-simpanan-berjangka"],
-  }
+  },
 );
 
 export const getSumSimpanan = unstable_cache(
@@ -475,8 +475,8 @@ export const getSumSimpanan = unstable_cache(
           .where(
             eq(
               settingPendaftaranSimpananTable.jenisPendaftaranSimpanan,
-              jenis as JenisPendaftaranSimpananType
-            )
+              jenis as JenisPendaftaranSimpananType,
+            ),
           )
           .orderBy(desc(settingPendaftaranSimpananTable.tanggalAkhirSimpanan))
           .limit(1);
@@ -510,11 +510,11 @@ export const getSumSimpanan = unstable_cache(
           ? [
               gte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                dateFilter.start
+                dateFilter.start,
               ),
               lte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                dateFilter.end
+                dateFilter.end,
               ),
             ]
           : []),
@@ -538,7 +538,7 @@ export const getSumSimpanan = unstable_cache(
         const [takingResult] = await db
           .select({
             total: sum(pengambilanSimpananTable.jumlahPengambilanSimpanan).as(
-              "total"
+              "total",
             ),
           })
           .from(pengambilanSimpananTable)
@@ -559,7 +559,7 @@ export const getSumSimpanan = unstable_cache(
   ["sum-simpanan"],
   {
     tags: ["sum-simpanan"],
-  }
+  },
 );
 
 export const getMaxPengambilanSimpanan = async (id: string) => {
@@ -654,7 +654,7 @@ export const getAllSimpananById = async (id: string) => {
 
 export const getSumPengambilanById = async (
   id: string,
-  jenis: JenisSimpananType
+  jenis: JenisSimpananType,
 ) => {
   try {
     if (!isValidId(id)) {
@@ -664,7 +664,7 @@ export const getSumPengambilanById = async (
     const [takingResult] = await db
       .select({
         total: sum(pengambilanSimpananTable.jumlahPengambilanSimpanan).as(
-          "total"
+          "total",
         ),
       })
       .from(pengambilanSimpananTable)
@@ -672,8 +672,8 @@ export const getSumPengambilanById = async (
         and(
           eq(pengambilanSimpananTable.noAnggota, id),
           eq(pengambilanSimpananTable.jenisPengambilanSimpanan, jenis),
-          eq(pengambilanSimpananTable.statusPengambilanSimpanan, "APPROVED")
-        )
+          eq(pengambilanSimpananTable.statusPengambilanSimpanan, "APPROVED"),
+        ),
       );
 
     return Number(takingResult.total ?? 0);
@@ -691,7 +691,7 @@ export const getTotalSumPengambilanById = unstable_cache(
       const jenisList = ["SUKAMANA", "LEBARAN", "QURBAN", "UBAR"] as const;
 
       const results = await Promise.all(
-        jenisList.map((jenis) => getSumPengambilanById(id, jenis))
+        jenisList.map((jenis) => getSumPengambilanById(id, jenis)),
       );
 
       const [sukamana, lebaran, qurban, ubar] = results;
@@ -708,7 +708,7 @@ export const getTotalSumPengambilanById = unstable_cache(
   ["get-total-sum-pengambilan-by-id"],
   {
     tags: ["get-total-sum-pengambilan-by-id"],
-  }
+  },
 );
 
 export const getPengambilanSimpananById = unstable_cache(
@@ -740,7 +740,7 @@ export const getPengambilanSimpananById = unstable_cache(
   ["get-pengambilan-simpanan-by-id"],
   {
     tags: ["get-pengambilan-simpanan-by-id"],
-  }
+  },
 );
 
 export const getPengambilanSimpanan = unstable_cache(
@@ -767,11 +767,11 @@ export const getPengambilanSimpanan = unstable_cache(
         .from(pengambilanSimpananTable)
         .leftJoin(
           anggotaTable,
-          eq(pengambilanSimpananTable.noAnggota, anggotaTable.noAnggota)
+          eq(pengambilanSimpananTable.noAnggota, anggotaTable.noAnggota),
         )
         .leftJoin(
           unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
         )
         .orderBy(desc(pengambilanSimpananTable.tanggalPengambilanSimpanan));
 
@@ -788,7 +788,7 @@ export const getPengambilanSimpanan = unstable_cache(
   ["get-pengambilan-simpanan"],
   {
     tags: ["get-pengambilan-simpanan"],
-  }
+  },
 );
 
 export const verifPengambilanSimpananBerjangka = unstable_cache(
@@ -808,8 +808,8 @@ export const verifPengambilanSimpananBerjangka = unstable_cache(
           and(
             eq(pengambilanSimpananTable.noAnggota, id),
             eq(pengambilanSimpananTable.jenisPengambilanSimpanan, jenis),
-            eq(pengambilanSimpananTable.statusPengambilanSimpanan, "PENDING")
-          )
+            eq(pengambilanSimpananTable.statusPengambilanSimpanan, "PENDING"),
+          ),
         )
         .limit(1);
 
@@ -833,13 +833,13 @@ export const verifPengambilanSimpananBerjangka = unstable_cache(
             and(
               eq(
                 settingPendaftaranSimpananTable.jenisPendaftaranSimpanan,
-                jenis as JenisPendaftaranSimpananType
+                jenis as JenisPendaftaranSimpananType,
               ),
               eq(
                 settingPendaftaranSimpananTable.statusPendaftaranSimpanan,
-                "OPEN"
-              )
-            )
+                "OPEN",
+              ),
+            ),
           )
           .orderBy(desc(settingPendaftaranSimpananTable.createdAt))
           .limit(1);
@@ -860,13 +860,13 @@ export const verifPengambilanSimpananBerjangka = unstable_cache(
               eq(pengambilanSimpananTable.jenisPengambilanSimpanan, jenis),
               gte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                setting.tanggalAwalSimpanan
+                setting.tanggalAwalSimpanan,
               ),
               lte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                setting.tanggalAkhirSimpanan
-              )
-            )
+                setting.tanggalAkhirSimpanan,
+              ),
+            ),
           )
           .limit(1);
 
@@ -893,7 +893,7 @@ export const verifPengambilanSimpananBerjangka = unstable_cache(
   ["verif-pengambilan-simpanan-berjangka"],
   {
     tags: ["verif-pengambilan-simpanan-berjangka"],
-  }
+  },
 );
 
 export const getSuratPengambilanSimpanan = async (id: string) => {
@@ -920,11 +920,11 @@ export const getSuratPengambilanSimpanan = async (id: string) => {
       .from(pengambilanSimpananTable)
       .leftJoin(
         anggotaTable,
-        eq(pengambilanSimpananTable.noAnggota, anggotaTable.noAnggota)
+        eq(pengambilanSimpananTable.noAnggota, anggotaTable.noAnggota),
       )
       .leftJoin(
         unitKerjaTable,
-        eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+        eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
       )
       .where(eq(pengambilanSimpananTable.noPengambilanSimpanan, id))
       .limit(1);
@@ -952,7 +952,7 @@ export const getSimpananAnggota = unstable_cache(
         .from(anggotaTable)
         .leftJoin(
           unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
         )
         .where(eq(anggotaTable.statusAnggota, "ACTIVE"));
 
@@ -985,8 +985,11 @@ export const getSimpananAnggota = unstable_cache(
           .where(
             and(
               inArray(pengambilanSimpananTable.noAnggota, noAnggotaList),
-              eq(pengambilanSimpananTable.statusPengambilanSimpanan, "APPROVED")
-            )
+              eq(
+                pengambilanSimpananTable.statusPengambilanSimpanan,
+                "APPROVED",
+              ),
+            ),
           ),
       ]);
 
@@ -1006,7 +1009,8 @@ export const getSimpananAnggota = unstable_cache(
         for (const jenis of JENIS_SIMPANAN) {
           const totalSaving = simpanan
             .filter(
-              (s) => s.noAnggota === user.noAnggota && s.jenisSimpanan === jenis
+              (s) =>
+                s.noAnggota === user.noAnggota && s.jenisSimpanan === jenis,
             )
             .reduce((sum, s) => sum + Number(s.jumlahSimpanan), 0);
 
@@ -1014,7 +1018,7 @@ export const getSimpananAnggota = unstable_cache(
             .filter(
               (t) =>
                 t.noAnggota === user.noAnggota &&
-                t.jenisPengambilanSimpanan === jenis
+                t.jenisPengambilanSimpanan === jenis,
             )
             .reduce((sum, t) => sum + Number(t.jumlahPengambilanSimpanan), 0);
 
@@ -1054,7 +1058,7 @@ export const getSimpananAnggota = unstable_cache(
   ["get-simpanan-anggota"],
   {
     tags: ["get-simpanan-anggota"],
-  }
+  },
 );
 
 export const getSumSimpananAnggota = unstable_cache(
@@ -1105,8 +1109,8 @@ export const getSumSimpananAnggota = unstable_cache(
         .where(
           and(
             inArray(pengambilanSimpananTable.noAnggota, noAnggotaList),
-            eq(pengambilanSimpananTable.statusPengambilanSimpanan, "APPROVED")
-          )
+            eq(pengambilanSimpananTable.statusPengambilanSimpanan, "APPROVED"),
+          ),
         ),
     ]);
 
@@ -1131,7 +1135,7 @@ export const getSumSimpananAnggota = unstable_cache(
   ["get-sum-simpanan-anggota"],
   {
     tags: ["get-sum-simpanan-anggota"],
-  }
+  },
 );
 
 export const getLaporanSimpananBerjangka = unstable_cache(
@@ -1151,8 +1155,8 @@ export const getLaporanSimpananBerjangka = unstable_cache(
         .where(
           eq(
             settingPendaftaranSimpananTable.idSettingPendaftaran,
-            idSettingPendaftaran
-          )
+            idSettingPendaftaran,
+          ),
         )
         .limit(1);
 
@@ -1179,20 +1183,20 @@ export const getLaporanSimpananBerjangka = unstable_cache(
             .from(pendaftaranSimpananTable)
             .innerJoin(
               anggotaTable,
-              eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota)
+              eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota),
             )
             .innerJoin(
               unitKerjaTable,
-              eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+              eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
             )
             .where(
               and(
                 eq(
                   pendaftaranSimpananTable.settingPendaftaranId,
-                  setting.idSettingPendaftaran
+                  setting.idSettingPendaftaran,
                 ),
-                eq(anggotaTable.statusAnggota, "ACTIVE")
-              )
+                eq(anggotaTable.statusAnggota, "ACTIVE"),
+              ),
             );
 
           const noAnggotaList = pendaftar.map((p) => p.noAnggota);
@@ -1206,11 +1210,14 @@ export const getLaporanSimpananBerjangka = unstable_cache(
                 inArray(simpananTable.noAnggota, noAnggotaList),
                 eq(
                   simpananTable.jenisSimpanan,
-                  setting.jenisPendaftaranSimpanan
+                  setting.jenisPendaftaranSimpanan,
                 ),
                 gte(simpananTable.tanggalSimpanan, setting.tanggalAwalSimpanan),
-                lte(simpananTable.tanggalSimpanan, setting.tanggalAkhirSimpanan)
-              )
+                lte(
+                  simpananTable.tanggalSimpanan,
+                  setting.tanggalAkhirSimpanan,
+                ),
+              ),
             );
 
           // 3. Get PengambilanSimpanan
@@ -1222,17 +1229,17 @@ export const getLaporanSimpananBerjangka = unstable_cache(
                 inArray(pengambilanSimpananTable.noAnggota, noAnggotaList),
                 eq(
                   pengambilanSimpananTable.jenisPengambilanSimpanan,
-                  setting.jenisPendaftaranSimpanan
+                  setting.jenisPendaftaranSimpanan,
                 ),
                 gte(
                   pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                  setting.tanggalAwalSimpanan
+                  setting.tanggalAwalSimpanan,
                 ),
                 lte(
                   pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                  setting.tanggalAkhirSimpanan
-                )
-              )
+                  setting.tanggalAkhirSimpanan,
+                ),
+              ),
             );
 
           // 4. Gabungkan hasil akhir
@@ -1244,13 +1251,13 @@ export const getLaporanSimpananBerjangka = unstable_cache(
               namaUnitKerja: item.namaUnitKerja,
               Simpanan: simpanan.filter((s) => s.noAnggota === item.noAnggota),
               PengambilanSimpanan: pengambilan.filter(
-                (p) => p.noAnggota === item.noAnggota
+                (p) => p.noAnggota === item.noAnggota,
               ),
             },
           }));
 
           return merged;
-        }
+        },
       );
 
       if (!result.length) {
@@ -1292,7 +1299,7 @@ export const getLaporanSimpananBerjangka = unstable_cache(
   ["get-laporan-simpanan-berjangka"],
   {
     tags: ["get-laporan-simpanan-berjangka"],
-  }
+  },
 );
 
 export const getPembagianSimpananBerjangka = unstable_cache(
@@ -1310,7 +1317,7 @@ export const getPembagianSimpananBerjangka = unstable_cache(
         .select()
         .from(settingPendaftaranSimpananTable)
         .where(
-          eq(settingPendaftaranSimpananTable.idSettingPendaftaran, idSetting)
+          eq(settingPendaftaranSimpananTable.idSettingPendaftaran, idSetting),
         )
         .limit(1);
 
@@ -1332,16 +1339,16 @@ export const getPembagianSimpananBerjangka = unstable_cache(
           .from(pendaftaranSimpananTable)
           .innerJoin(
             anggotaTable,
-            eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota)
+            eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota),
           )
           .where(
             and(
               eq(
                 pendaftaranSimpananTable.settingPendaftaranId,
-                settingData.idSettingPendaftaran
+                settingData.idSettingPendaftaran,
               ),
-              eq(anggotaTable.statusAnggota, "ACTIVE")
-            )
+              eq(anggotaTable.statusAnggota, "ACTIVE"),
+            ),
           );
 
         const noAnggotaList = pendaftar.map((p) => p.noAnggota);
@@ -1355,17 +1362,17 @@ export const getPembagianSimpananBerjangka = unstable_cache(
               inArray(simpananTable.noAnggota, noAnggotaList),
               eq(
                 simpananTable.jenisSimpanan,
-                settingData.jenisPendaftaranSimpanan
+                settingData.jenisPendaftaranSimpanan,
               ),
               gte(
                 simpananTable.tanggalSimpanan,
-                settingData.tanggalAwalSimpanan
+                settingData.tanggalAwalSimpanan,
               ),
               lte(
                 simpananTable.tanggalSimpanan,
-                settingData.tanggalAkhirSimpanan
-              )
-            )
+                settingData.tanggalAkhirSimpanan,
+              ),
+            ),
           );
 
         // 3. Get PengambilanSimpanan
@@ -1377,17 +1384,17 @@ export const getPembagianSimpananBerjangka = unstable_cache(
               inArray(pengambilanSimpananTable.noAnggota, noAnggotaList),
               eq(
                 pengambilanSimpananTable.jenisPengambilanSimpanan,
-                settingData.jenisPendaftaranSimpanan
+                settingData.jenisPendaftaranSimpanan,
               ),
               gte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                settingData.tanggalAwalSimpanan
+                settingData.tanggalAwalSimpanan,
               ),
               lte(
                 pengambilanSimpananTable.tanggalPengambilanSimpanan,
-                settingData.tanggalAkhirSimpanan
-              )
-            )
+                settingData.tanggalAkhirSimpanan,
+              ),
+            ),
           );
 
         const lastId = await getLastIdPengambilanSimpanan();
@@ -1400,7 +1407,7 @@ export const getPembagianSimpananBerjangka = unstable_cache(
             noAnggota: item.noAnggota,
             Simpanan: simpanan.filter((s) => s.noAnggota === item.noAnggota),
             PengambilanSimpanan: pengambilan.filter(
-              (p) => p.noAnggota === item.noAnggota
+              (p) => p.noAnggota === item.noAnggota,
             ),
           },
         }));
@@ -1443,7 +1450,7 @@ export const getPembagianSimpananBerjangka = unstable_cache(
   ["get-pembagian-simpanan-berjangka"],
   {
     tags: ["get-pembagian-simpanan-berjangka"],
-  }
+  },
 );
 
 export const getSimpananBerjangkaById = unstable_cache(
@@ -1474,8 +1481,8 @@ export const getSimpananBerjangkaById = unstable_cache(
           settingPendaftaranSimpananTable,
           eq(
             pendaftaranSimpananTable.settingPendaftaranId,
-            settingPendaftaranSimpananTable.idSettingPendaftaran
-          )
+            settingPendaftaranSimpananTable.idSettingPendaftaran,
+          ),
         )
         .where(eq(pendaftaranSimpananTable.noAnggota, id))
         .orderBy(desc(pendaftaranSimpananTable.tanggalPendaftaran));
@@ -1493,7 +1500,7 @@ export const getSimpananBerjangkaById = unstable_cache(
   ["get-simpanan-berjangka-by-id"],
   {
     tags: ["get-simpanan-berjangka-by-id"],
-  }
+  },
 );
 
 export const getStrukSimpananBerjangkaById = unstable_cache(
@@ -1530,18 +1537,18 @@ export const getStrukSimpananBerjangkaById = unstable_cache(
           .from(pendaftaranSimpananTable)
           .innerJoin(
             anggotaTable,
-            eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota)
+            eq(pendaftaranSimpananTable.noAnggota, anggotaTable.noAnggota),
           )
           .innerJoin(
             unitKerjaTable,
-            eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+            eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
           )
           .innerJoin(
             settingPendaftaranSimpananTable,
             eq(
               pendaftaranSimpananTable.settingPendaftaranId,
-              settingPendaftaranSimpananTable.idSettingPendaftaran
-            )
+              settingPendaftaranSimpananTable.idSettingPendaftaran,
+            ),
           )
           .where(eq(pendaftaranSimpananTable.idPendaftar, idPendaftar))
           .limit(1)
@@ -1591,5 +1598,5 @@ export const getStrukSimpananBerjangkaById = unstable_cache(
   ["get-struk-simpanan-berjangka"],
   {
     tags: ["get-struk-simpanan-berjangka"],
-  }
+  },
 );

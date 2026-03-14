@@ -45,7 +45,7 @@ import {
 } from "./action-notifikasi";
 
 export const insertSettingSimpananBerjangka = async (
-  values: z.infer<typeof SettingSimpananSchema>
+  values: z.infer<typeof SettingSimpananSchema>,
 ) => {
   try {
     const session = await auth();
@@ -99,7 +99,7 @@ export const insertSettingSimpananBerjangka = async (
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPotonganRevalidate,
         ...tagsNotifikasiRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -118,7 +118,7 @@ export const insertSettingSimpananBerjangka = async (
 };
 
 export const updateSettingSimpananBerjangka = async (
-  values: z.infer<typeof SettingSimpananUpdateOrDeleteSchema>
+  values: z.infer<typeof SettingSimpananUpdateOrDeleteSchema>,
 ) => {
   try {
     const session = await auth();
@@ -156,8 +156,8 @@ export const updateSettingSimpananBerjangka = async (
       .where(
         eq(
           settingPendaftaranSimpananTable.idSettingPendaftaran,
-          validateValues.data.idSettingPendaftaran
-        )
+          validateValues.data.idSettingPendaftaran,
+        ),
       )
       .returning();
 
@@ -175,7 +175,7 @@ export const updateSettingSimpananBerjangka = async (
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPotonganRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -194,7 +194,7 @@ export const updateSettingSimpananBerjangka = async (
 };
 
 export const deleteSettingSimpananBerjangka = async (
-  values: z.infer<typeof SettingSimpananUpdateOrDeleteSchema>
+  values: z.infer<typeof SettingSimpananUpdateOrDeleteSchema>,
 ) => {
   try {
     const session = await auth();
@@ -225,8 +225,8 @@ export const deleteSettingSimpananBerjangka = async (
       .where(
         eq(
           settingPendaftaranSimpananTable.idSettingPendaftaran,
-          validateValues.data.idSettingPendaftaran
-        )
+          validateValues.data.idSettingPendaftaran,
+        ),
       )
       .returning();
 
@@ -244,7 +244,7 @@ export const deleteSettingSimpananBerjangka = async (
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPotonganRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -263,7 +263,7 @@ export const deleteSettingSimpananBerjangka = async (
 };
 
 export const insertPendaftaranSimpanan = async (
-  values: z.infer<typeof PendaftaranSimpananSchema>
+  values: z.infer<typeof PendaftaranSimpananSchema>,
 ) => {
   try {
     const session = await auth();
@@ -288,10 +288,10 @@ export const insertPendaftaranSimpanan = async (
         and(
           eq(
             pendaftaranSimpananTable.settingPendaftaranId,
-            validateValues.data.settingPendaftaranId
+            validateValues.data.settingPendaftaranId,
           ),
-          eq(pendaftaranSimpananTable.noAnggota, session.user.noAnggota)
-        )
+          eq(pendaftaranSimpananTable.noAnggota, session.user.noAnggota),
+        ),
       );
 
     if (isDaftar) {
@@ -322,7 +322,7 @@ export const insertPendaftaranSimpanan = async (
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPotonganRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -341,7 +341,7 @@ export const insertPendaftaranSimpanan = async (
 };
 
 export const updatePendaftaranSimpanan = async (
-  values: z.infer<typeof UpdatePendaftaranSimpananSchema>
+  values: z.infer<typeof UpdatePendaftaranSimpananSchema>,
 ) => {
   try {
     const session = await auth();
@@ -365,8 +365,8 @@ export const updatePendaftaranSimpanan = async (
       .where(
         eq(
           pendaftaranSimpananTable.idPendaftar,
-          validateValues.data.idPendaftar
-        )
+          validateValues.data.idPendaftar,
+        ),
       )
       .returning();
 
@@ -383,7 +383,7 @@ export const updatePendaftaranSimpanan = async (
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPotonganRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -404,7 +404,7 @@ export const updatePendaftaranSimpanan = async (
 export const insertPengambilanSimpanan = async (
   limit: number,
   type: string,
-  values: unknown
+  values: unknown,
 ) => {
   try {
     const session = await auth();
@@ -436,7 +436,7 @@ export const insertPengambilanSimpanan = async (
 
     const verif = await verifPengambilanSimpananBerjangka(
       noAnggota,
-      jenisPengambilanSimpanan
+      jenisPengambilanSimpanan,
     );
 
     if (!verif.ok) {
@@ -455,7 +455,7 @@ export const insertPengambilanSimpanan = async (
       .values({
         noPengambilanSimpanan: generateIdPengambilanSimpanan(
           id,
-          jenisPengambilanSimpanan
+          jenisPengambilanSimpanan,
         ),
         noAnggota,
         jenisPengambilanSimpanan,
@@ -478,7 +478,7 @@ export const insertPengambilanSimpanan = async (
         ...tagsSimpananRevalidate,
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -529,8 +529,8 @@ export const updatePengambilanSimpanan = async (values: unknown) => {
       .where(
         eq(
           pengambilanSimpananTable.noPengambilanSimpanan,
-          noPengambilanSimpanan
-        )
+          noPengambilanSimpanan,
+        ),
       )
       .returning();
 
@@ -550,7 +550,7 @@ export const updatePengambilanSimpanan = async (values: unknown) => {
         ...tagsPendaftaranSimpananRevalidate,
         ...tagsPengambilanSimpananRevalidate,
         ...tagsPinjamanRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));
@@ -569,7 +569,7 @@ export const updatePengambilanSimpanan = async (values: unknown) => {
 };
 
 export const pembagianSimpanan = async (
-  values: z.infer<typeof PembagianSimpananSchema>
+  values: z.infer<typeof PembagianSimpananSchema>,
 ) => {
   try {
     const session = await auth();
@@ -595,7 +595,7 @@ export const pembagianSimpanan = async (
     }
 
     const detailDataSimpanan = await getPembagianSimpananBerjangka(
-      validateValues.data.id
+      validateValues.data.id,
     );
 
     if (!detailDataSimpanan.ok || !detailDataSimpanan.data) {
@@ -617,8 +617,8 @@ export const pembagianSimpanan = async (
         .where(
           eq(
             settingPendaftaranSimpananTable.idSettingPendaftaran,
-            validateValues.data.id
-          )
+            validateValues.data.id,
+          ),
         )
         .returning();
 
@@ -626,7 +626,7 @@ export const pembagianSimpanan = async (
       if (detailDataSimpanan.data.detailPembagianSimpanan.length > 0) {
         for (const chunk of chunkArray(
           detailDataSimpanan.data.detailPembagianSimpanan,
-          100
+          100,
         )) {
           await tx
             .insert(detailPembagianSimpananTable)
@@ -639,7 +639,7 @@ export const pembagianSimpanan = async (
       if (detailDataSimpanan.data.pengambilanSimpanan.length > 0) {
         for (const chunk of chunkArray(
           detailDataSimpanan.data.pengambilanSimpanan,
-          100
+          100,
         )) {
           await tx
             .insert(pengambilanSimpananTable)
@@ -670,7 +670,7 @@ export const pembagianSimpanan = async (
           ...tagsPengambilanSimpananRevalidate,
           ...tagsPotonganRevalidate,
           ...tagsNotifikasiRevalidate,
-        ])
+        ]),
       );
 
       tagsToRevalidate.forEach((tag) => revalidateTag(tag));

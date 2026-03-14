@@ -70,8 +70,8 @@ export const getLastIdPinjaman = async (jenis: JenisPinjamanType) => {
     .where(
       and(
         like(pinjamanTable.noPinjaman, keyword),
-        eq(pinjamanTable.jenisPinjman, jenis)
-      )
+        eq(pinjamanTable.jenisPinjman, jenis),
+      ),
     )
     .orderBy(desc(pinjamanTable.noPinjaman))
     .limit(1)
@@ -134,7 +134,7 @@ export const getLastPinjamanById = unstable_cache(
   async (
     noAnggota: string,
     jenis: JenisPinjamanType,
-    prioritasStatus: StatusPinjamanPrioritasType
+    prioritasStatus: StatusPinjamanPrioritasType,
   ): Promise<GetLastPinjamanByIdResult> => {
     try {
       const validateValues = noAnggotaSchema.safeParse(noAnggota);
@@ -163,9 +163,9 @@ export const getLastPinjamanById = unstable_cache(
             eq(pinjamanTable.jenisPinjman, jenis),
             or(
               eq(pinjamanTable.statusPinjaman, "PENDING"),
-              eq(pinjamanTable.statusPinjaman, "APPROVED")
-            )
-          )
+              eq(pinjamanTable.statusPinjaman, "APPROVED"),
+            ),
+          ),
         )
         .orderBy(orderClause, desc(pinjamanTable.tanggalPinjaman))
         .limit(1);
@@ -195,8 +195,8 @@ export const getLastPinjamanById = unstable_cache(
         .where(
           and(
             eq(angsuranTable.pinjamanId, pinjaman.noPinjaman),
-            gt(angsuranTable.angsuranPinjamanKe, 0)
-          )
+            gt(angsuranTable.angsuranPinjamanKe, 0),
+          ),
         );
 
       // cek lagi perhitungan nyaa
@@ -205,7 +205,7 @@ export const getLastPinjamanById = unstable_cache(
 
       const totalSudahBayarValue = Math.round(
         Number(angsuran?.total ?? 0) -
-          admin * (angsuran?.angsuranPinjamanKe ?? 0)
+          admin * (angsuran?.angsuranPinjamanKe ?? 0),
       );
 
       const jumlahPinjaman = Number(pinjaman.ajuanPinjaman);
@@ -216,7 +216,7 @@ export const getLastPinjamanById = unstable_cache(
       const pelunasan = totalHarusBayar - totalSudahBayarValue + admin;
 
       const persentaseLunas = Number(
-        ((totalSudahBayarValue / totalHarusBayar) * 100).toFixed(2)
+        ((totalSudahBayarValue / totalHarusBayar) * 100).toFixed(2),
       );
 
       if (persentaseLunas < 50) {
@@ -276,7 +276,7 @@ export const getLastPinjamanById = unstable_cache(
   ["get-last-pinjaman-by-id"],
   {
     tags: ["get-last-pinjaman-by-id"],
-  }
+  },
 );
 
 export const getMaxJumlahPinjamanById = unstable_cache(
@@ -299,14 +299,14 @@ export const getMaxJumlahPinjamanById = unstable_cache(
         .where(
           and(
             eq(simpananTable.noAnggota, noAnggota),
-            inArray(simpananTable.jenisSimpanan, ["WAJIB", "SUKAMANA"])
-          )
+            inArray(simpananTable.jenisSimpanan, ["WAJIB", "SUKAMANA"]),
+          ),
         );
 
       const [pengambilan] = await db
         .select({
           total: sum(pengambilanSimpananTable.jumlahPengambilanSimpanan).as(
-            "total"
+            "total",
           ),
         })
         .from(pengambilanSimpananTable)
@@ -320,8 +320,8 @@ export const getMaxJumlahPinjamanById = unstable_cache(
             inArray(pengambilanSimpananTable.statusPengambilanSimpanan, [
               "APPROVED",
               "PENDING",
-            ])
-          )
+            ]),
+          ),
         );
 
       // Normalisasi nilai null ke 0
@@ -352,7 +352,7 @@ export const getMaxJumlahPinjamanById = unstable_cache(
   ["get-max-jumlah-pinjaman-by-id"],
   {
     tags: ["get-max-jumlah-pinjaman-by-id"],
-  }
+  },
 );
 
 export const getPinjaman = unstable_cache(
@@ -380,11 +380,11 @@ export const getPinjaman = unstable_cache(
         .from(pinjamanTable)
         .leftJoin(
           anggotaTable,
-          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota)
+          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
         )
         .leftJoin(
           unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
         )
         .where(eq(pinjamanTable.jenisPinjman, jenis))
         .orderBy(desc(pinjamanTable.tanggalPinjaman));
@@ -402,7 +402,7 @@ export const getPinjaman = unstable_cache(
   ["get-pinjaman"],
   {
     tags: ["get-pinjaman"],
-  }
+  },
 );
 
 export const getPinjamanById = unstable_cache(
@@ -427,17 +427,17 @@ export const getPinjamanById = unstable_cache(
         .from(pinjamanTable)
         .leftJoin(
           anggotaTable,
-          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota)
+          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
         )
         .leftJoin(
           unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
         )
         .where(
           and(
             eq(pinjamanTable.jenisPinjman, jenis),
-            eq(pinjamanTable.noAnggota, noAnggota)
-          )
+            eq(pinjamanTable.noAnggota, noAnggota),
+          ),
         )
         .orderBy(desc(pinjamanTable.tanggalPinjaman));
 
@@ -454,7 +454,7 @@ export const getPinjamanById = unstable_cache(
   ["get-pinjaman-by-id"],
   {
     tags: ["get-pinjaman-by-id"],
-  }
+  },
 );
 
 export const getAngsuranById = unstable_cache(
@@ -480,13 +480,13 @@ export const getAngsuranById = unstable_cache(
         .from(angsuranTable)
         .leftJoin(
           pinjamanTable,
-          eq(angsuranTable.pinjamanId, pinjamanTable.noPinjaman)
+          eq(angsuranTable.pinjamanId, pinjamanTable.noPinjaman),
         )
         .where(
           and(
             eq(angsuranTable.pinjamanId, id),
-            gt(angsuranTable.angsuranPinjamanKe, 0)
-          )
+            gt(angsuranTable.angsuranPinjamanKe, 0),
+          ),
         )
         .orderBy(asc(angsuranTable.angsuranPinjamanKe));
 
@@ -503,7 +503,7 @@ export const getAngsuranById = unstable_cache(
   ["get-angsuran-by-id"],
   {
     tags: ["get-angsuran-by-id"],
-  }
+  },
 );
 
 export const getSuratPinjamanById = async (id: string) => {
@@ -536,15 +536,15 @@ export const getSuratPinjamanById = async (id: string) => {
       .from(pinjamanTable)
       .leftJoin(
         anggotaTable,
-        eq(pinjamanTable.noAnggota, anggotaTable.noAnggota)
+        eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
       )
       .leftJoin(
         jabatanTable,
-        eq(anggotaTable.jabatanId, jabatanTable.noJabatan)
+        eq(anggotaTable.jabatanId, jabatanTable.noJabatan),
       )
       .leftJoin(
         unitKerjaTable,
-        eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+        eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
       )
       .where(eq(pinjamanTable.noPinjaman, id))
       .limit(1);
@@ -586,23 +586,23 @@ export const getLaporanPinjaman = unstable_cache(
             .from(pinjamanTable)
             .innerJoin(
               anggotaTable,
-              eq(pinjamanTable.noAnggota, anggotaTable.noAnggota)
+              eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
             )
             .innerJoin(
               unitKerjaTable,
-              eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja)
+              eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
             )
             .where(
               and(
                 eq(
                   pinjamanTable.jenisPinjman,
-                  validateValues.data.jenisPinjaman
+                  validateValues.data.jenisPinjaman,
                 ),
                 eq(
                   pinjamanTable.statusPinjaman,
-                  validateValues.data.statusPinjaman
-                )
-              )
+                  validateValues.data.statusPinjaman,
+                ),
+              ),
             );
 
           const pinjamanIds = pinjaman.map((p) => p.noPinjaman);
@@ -617,8 +617,8 @@ export const getLaporanPinjaman = unstable_cache(
             .where(
               and(
                 inArray(angsuranTable.pinjamanId, pinjamanIds),
-                gt(angsuranTable.angsuranPinjamanKe, 0)
-              )
+                gt(angsuranTable.angsuranPinjamanKe, 0),
+              ),
             );
 
           // Step 3: Gabungkan pinjaman + angsuran
@@ -633,7 +633,7 @@ export const getLaporanPinjaman = unstable_cache(
           }));
 
           return combined;
-        }
+        },
       );
 
       if (!result.length) {
@@ -661,7 +661,7 @@ export const getLaporanPinjaman = unstable_cache(
     }
   },
   ["get-laporan-pinjaman"],
-  { tags: ["get-laporan-pinjaman"] }
+  { tags: ["get-laporan-pinjaman"] },
 );
 
 export const getCountStatusPinjaman = unstable_cache(
@@ -698,5 +698,5 @@ export const getCountStatusPinjaman = unstable_cache(
     return result as TChartPinjaman;
   },
   ["get-count-status-pinjaman"],
-  { tags: ["get-count-status-pinjaman"] }
+  { tags: ["get-count-status-pinjaman"] },
 );

@@ -42,7 +42,7 @@ import { auth } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 
 export async function insertPotongan(
-  values: z.infer<typeof RowsValidationSchema>
+  values: z.infer<typeof RowsValidationSchema>,
 ) {
   try {
     const session = await auth();
@@ -186,7 +186,7 @@ export async function insertPotongan(
               nama: anggota.namaAnggota,
               namaUnitkerja: anggota.namaUnitKerja,
               simpanan: simpananList,
-            })
+            }),
           );
         }
 
@@ -196,7 +196,7 @@ export async function insertPotongan(
               nama: anggota.namaAnggota,
               namaUnitkerja: anggota.namaUnitKerja,
               angsuran: angsuranList,
-            })
+            }),
           );
         }
 
@@ -232,7 +232,7 @@ export async function insertPotongan(
           await tx.insert(angsuranTable).values(chunk).onConflictDoNothing();
 
           const completedPinjamanIds = Array.from(
-            new Set(chunk.map((a) => a.pinjamanId))
+            new Set(chunk.map((a) => a.pinjamanId)),
           );
 
           await tx
@@ -259,7 +259,7 @@ export async function insertPotongan(
         ...tagsPotonganRevalidate,
         ...tagsNotifikasiRevalidate,
         ...tagsPengambilanSimpananRevalidate,
-      ])
+      ]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));

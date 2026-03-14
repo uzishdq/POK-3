@@ -52,7 +52,7 @@ export function formatDatebyMonth(dateString: Date | string) {
 
   const year = dateObject.getFullYear();
   const month = new Intl.DateTimeFormat("id-ID", { month: "long" }).format(
-    dateObject
+    dateObject,
   );
   const day = dateObject.getDate();
 
@@ -91,23 +91,23 @@ export const generatePotongGaji = (
   simpananQurban: TSimpananPotongGaji[] | null,
   simpananUbar: TSimpananPotongGaji[] | null,
   pinjamanProduktif: TPinjamanPotongGaji[] | null,
-  pinjamanBarang: TPinjamanPotongGaji[] | null
+  pinjamanBarang: TPinjamanPotongGaji[] | null,
 ): TPotongGaji[] => {
   if (!anggota) return [];
 
   return anggota.map((a) => {
     const lebaran = simpananLebaran?.find(
-      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "LEBARAN"
+      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "LEBARAN",
     );
     const qurban = simpananQurban?.find(
-      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "QURBAN"
+      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "QURBAN",
     );
     const ubar = simpananUbar?.find(
-      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "UBAR"
+      (s) => s.noAnggota === a.noAnggota && s.jenisSimpanan === "UBAR",
     );
 
     const produktif = pinjamanProduktif?.find(
-      (p) => p.noAnggota === a.noAnggota
+      (p) => p.noAnggota === a.noAnggota,
     );
     const barang = pinjamanBarang?.find((p) => p.noAnggota === a.noAnggota);
 
@@ -267,7 +267,7 @@ const counterMapSimpanan: Partial<Record<JenisSimpananType, number>> = {};
 
 export function generateIdSimpanan(
   lastId: string | null,
-  jenis: JenisSimpananType
+  jenis: JenisSimpananType,
 ): string {
   const kodeMap: Record<JenisSimpananType, string> = {
     WAJIB: "WB",
@@ -309,7 +309,7 @@ let counterMapPengambilanSimpanan: Partial<Record<JenisSimpananType, number>> =
 
 export function generateIdPengambilanSimpanan(
   lastId: string | null,
-  jenis: JenisSimpananType
+  jenis: JenisSimpananType,
 ): string {
   const kodeMap: Record<JenisSimpananType, string> = {
     WAJIB: "WB",
@@ -345,7 +345,7 @@ export function generateIdPengambilanSimpanan(
 
   const nomorUrut = counterMapPengambilanSimpanan[jenis]!.toString().padStart(
     3,
-    "0"
+    "0",
   );
 
   return `PS-${kode}-${tanggal}-${nomorUrut}`;
@@ -353,7 +353,7 @@ export function generateIdPengambilanSimpanan(
 
 export function generateIdPinjaman(
   lastId: string | null,
-  jenis: JenisPinjamanType
+  jenis: JenisPinjamanType,
 ): string {
   const kodeMap: Record<JenisPinjamanType, string> = {
     PRODUKTIF: "PR",
@@ -442,7 +442,7 @@ const counterMapPelunasanPinjaman: Partial<
 
 export function generateIdPelunasanPinjaman(
   lastId: string | null,
-  jenis: JenisPelunasanPinjamanType
+  jenis: JenisPelunasanPinjamanType,
 ): string {
   const kodeMap: Record<JenisPelunasanPinjamanType, string> = {
     CASH: "CH",
@@ -475,7 +475,7 @@ export function generateIdPelunasanPinjaman(
 
   const nomorUrut = counterMapPelunasanPinjaman[jenis]!.toString().padStart(
     3,
-    "0"
+    "0",
   );
 
   return `PP-${kode}-${tanggal}-${nomorUrut}`;
@@ -525,7 +525,7 @@ interface IPredictLoanBasedOnSalary {
 
 export function predictLoanBasedOnSalary(
   gaji: number,
-  pinjaman: number
+  pinjaman: number,
 ): IPredictLoanBasedOnSalary {
   // Menghitung batasan maksimum angsuran bulanan yang diizinkan (35% dari gaji bulanan)
   const maxInstallmentAllowed = calculateTakeHomePay(gaji);
@@ -559,7 +559,7 @@ export interface ICalculateLoanInstallment {
 export function calculateLoanInstallment(
   gaji: number,
   pinjaman: number,
-  waktuPengembalian: number
+  waktuPengembalian: number,
 ): ICalculateLoanInstallment {
   const admin = calculatePercentage(pinjaman, 1);
 
@@ -580,7 +580,7 @@ export function countReceive(
   data1: number,
   data2: number,
   data3: number,
-  data4: number
+  data4: number,
 ): number {
   const pinjaman = data1 ?? 0;
   const admin = data2 ?? 0;
@@ -658,7 +658,7 @@ function countPremi(pinjaman: number, tenor: number | string): number {
 export function calculateAsuransi(
   tanggal: Date | string,
   waktuPengembalian: number,
-  pinjaman: number
+  pinjaman: number,
 ) {
   const umur = countAge(tanggal);
 
@@ -790,7 +790,7 @@ export function chunkArray<T>(array: T[], size: number): T[][] {
 }
 
 export function transformLaporanPinjaman(
-  data: TDataPinjamanLaporan[]
+  data: TDataPinjamanLaporan[],
 ): TLaporanPinjaman[] {
   const pinjaman = data.map((item) => {
     const jasa = calculatePercentage(Number(item.ajuanPinjaman), 1);
@@ -804,7 +804,7 @@ export function transformLaporanPinjaman(
       {
         lastAngsuran: 0,
         jumlahAngsuran: 0,
-      }
+      },
     );
     const pokokMasuk = angsuran.jumlahAngsuran - jasa * angsuran.lastAngsuran;
     const sisaPokok = Number(item.ajuanPinjaman) - pokokMasuk;
@@ -832,7 +832,7 @@ export function transformLaporanPinjaman(
 
 function generateRangeMonth(
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ): string[] {
   const result: string[] = [];
   const start = new Date(startDate);
@@ -885,7 +885,7 @@ export function transformLaporanSimpananBerjangka({
       const bulan = formatBulan(simpanan.tanggalSimpanan);
       bulanMap.set(
         bulan,
-        (bulanMap.get(bulan) ?? 0) + Number(simpanan.jumlahSimpanan)
+        (bulanMap.get(bulan) ?? 0) + Number(simpanan.jumlahSimpanan),
       );
     }
 
@@ -900,18 +900,20 @@ export function transformLaporanSimpananBerjangka({
       (bulan) => ({
         bulan,
         total: bulanMap.get(bulan) ?? 0,
-      })
+      }),
     );
 
     const totalSimpanan = simpanan.reduce((sum, s) => sum + s.total, 0);
 
-    const totalBulan = simpanan.length;
+    // const totalBulan = simpanan.length;
     const persenBasil = setting.basil ?? 0;
 
-    const basil = simpanan.reduce((acc, curr, index) => {
-      const bobot = totalBulan - index;
-      return acc + curr.total * (persenBasil / 100) * bobot;
-    }, 0);
+    // const basil = simpanan.reduce((acc, curr, index) => {
+    //   const bobot = totalBulan - index;
+    //   return acc + curr.total * (persenBasil / 100) * bobot;
+    // }, 0);
+
+    const basil = totalSimpanan * (persenBasil / 100);
 
     const totalDenganBasil = totalSimpanan + basil;
     const admin = 5000;
@@ -1007,10 +1009,10 @@ export function transformPembagianSimpanan({
     const totalBersih =
       Simpanan.filter((s) => s.jenisSimpanan === setting.jenisSimpanan).reduce(
         (acc, s) => acc + Number(s.jumlahSimpanan),
-        0
+        0,
       ) -
       Pengambilan.filter(
-        (p) => p.jenisPengambilanSimpanan === setting.jenisSimpanan
+        (p) => p.jenisPengambilanSimpanan === setting.jenisSimpanan,
       ).reduce((acc, p) => acc + Number(p.jumlahPengambilanSimpanan), 0);
 
     if (totalBersih > 0) {
@@ -1048,7 +1050,7 @@ export function transformStrukSimpananBerjangka({
 }: ITransformStrukSimpananBerjangka): TStrukSimpananBerjangka {
   const bulanRange = generateRangeMonth(
     simpananData.tanggalAwalSimpanan,
-    simpananData.tanggalAkhirSimpanan
+    simpananData.tanggalAkhirSimpanan,
   );
   const persenBasil = Number(simpananData.basilSimpanan) ?? 0;
 
@@ -1059,7 +1061,7 @@ export function transformStrukSimpananBerjangka({
     const bulan = formatBulan(simpanan.tanggalDetailPembagian);
     bulanMap.set(
       bulan,
-      (bulanMap.get(bulan) ?? 0) + Number(simpanan.jumlahDetailPembagian)
+      (bulanMap.get(bulan) ?? 0) + Number(simpanan.jumlahDetailPembagian),
     );
   }
 
@@ -1067,20 +1069,26 @@ export function transformStrukSimpananBerjangka({
     (bulan) => ({
       bulan,
       total: bulanMap.get(bulan) ?? 0,
-    })
+    }),
   );
 
   const totalSimpanan = simpanan.reduce((sum, s) => sum + s.total, 0);
-  const totalBulan = simpanan.length;
+  // const totalBulan = simpanan.length;
 
-  const basil = simpanan.reduce((acc, curr, index) => {
-    const bobot = totalBulan - index;
-    return acc + curr.total * (persenBasil / 100) * bobot;
-  }, 0);
+  // const basil = simpanan.reduce((acc, curr, index) => {
+  //   const bobot = totalBulan - index;
+  //   return acc + curr.total * (persenBasil / 100) * bobot;
+  // }, 0);
+
+  const basil = totalSimpanan * (persenBasil / 100);
 
   const totalDenganBasil = totalSimpanan + basil;
   const admin = 5000;
   const tabunganBersih = totalDenganBasil - admin;
+
+  console.log("totalSimpanan:", totalSimpanan);
+  console.log("persenBasil:", persenBasil);
+  console.log("basil:", basil);
 
   return {
     noAnggota: simpananData.noAnggota,
@@ -1103,7 +1111,7 @@ export function transformStrukSimpananBerjangka({
 
 export function generateSimpananBerjangkaExcellData(
   laporan: TLaporanSimpananBerjangka[],
-  basil: number
+  basil: number,
 ): {
   columns: TColumnExcell[];
   rows: Record<string, unknown>[];
@@ -1121,7 +1129,7 @@ export function generateSimpananBerjangkaExcellData(
 
   // Ubah bulan ke format tanpa spasi: "Agustus - 2025" → "Agustus_2025"
   const bulanValueMap = Object.fromEntries(
-    allBulan.map((bulan) => [bulan, bulan.replace(/\s|-/g, "_")])
+    allBulan.map((bulan) => [bulan, bulan.replace(/\s|-/g, "_")]),
   );
 
   // Buat kolom Excel
@@ -1198,7 +1206,7 @@ export function setPotonganGaji(data: TPotongGaji[]): TInputPotongGaji[] {
 export function calculateUndurDiri(
   simpanan: TSumSimpananAnggota,
   produktif: GetLastPinjamanByIdResult,
-  barang: GetLastPinjamanByIdResult
+  barang: GetLastPinjamanByIdResult,
 ): TCalculateUndurDiri {
   let pelunasanProduktif = produktif.data?.pelunasan ?? 0;
   let pelunasanBarang = barang.data?.pelunasan ?? 0;
