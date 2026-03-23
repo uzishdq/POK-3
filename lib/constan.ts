@@ -102,6 +102,7 @@ export const ROUTES = {
       },
       PINJAMAN: {
         ASURANSI_PINJAMAN: "/dashboard/petugas/asuransi-pinjaman",
+        PENGAJUAN_PINJAMAN: "/dashboard/petugas/pengajuan-pinjaman-anggota",
         PELUNASAN_PINJAMAN: "/dashboard/petugas/pelunasan-pinjaman-anggota",
         PRODUKTIF: "/dashboard/petugas/pinjaman-produktif-anggota",
         BARANG: "/dashboard/petugas/pinjaman-barang-anggota",
@@ -166,6 +167,10 @@ export const PINJAMAN_PETUGAS_ROUTES = [
   {
     name: "Asuransi Pinjaman Anggota",
     href: ROUTES.AUTH.PETUGAS.PINJAMAN.ASURANSI_PINJAMAN,
+  },
+  {
+    name: "Tambah Pinjaman Anggota",
+    href: ROUTES.AUTH.PETUGAS.PINJAMAN.PENGAJUAN_PINJAMAN,
   },
   {
     name: "Pelunasan Pinjaman Anggota",
@@ -525,6 +530,7 @@ export const tagsAnggotaRevalidate = [
   "get-anggota-user",
   "count-anggota",
   "get-profile",
+  "get-anggota-trx",
 ];
 
 export const tagsPotonganRevalidate = [

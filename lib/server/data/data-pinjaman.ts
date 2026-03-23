@@ -11,26 +11,10 @@ import {
   simpananTable,
   unitKerjaTable,
 } from "@/lib/db/schema";
-import {
-  and,
-  asc,
-  count,
-  desc,
-  eq,
-  gt,
-  inArray,
-  like,
-  max,
-  or,
-  sql,
-  sum,
-} from "drizzle-orm";
+import { and, asc, count, desc, eq, gt, inArray, like, max, or, sql, sum } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { noAnggotaSchema } from "@/lib/schema/schema-helper";
-import {
-  JenisPinjamanType,
-  StatusPinjamanPrioritasType,
-} from "@/lib/types/helper";
+import { JenisPinjamanType, StatusPinjamanPrioritasType } from "@/lib/types/helper";
 import {
   GetLastPinjamanByIdResult,
   TAngsuran,
@@ -39,11 +23,7 @@ import {
 } from "@/lib/types/pinjaman";
 import { noPinjamanSchema } from "@/lib/schema/schema-pinjaman";
 import { TStrukPinjaman } from "@/lib/types/struk";
-import {
-  calculatePercentage,
-  formatTglPrefixId,
-  transformLaporanPinjaman,
-} from "@/lib/helper";
+import { calculatePercentage, formatTglPrefixId, transformLaporanPinjaman } from "@/lib/helper";
 import { laporanPinjamanSchema } from "@/lib/schema/schema-laporan";
 import { LABEL } from "@/lib/constan";
 import { TDataPinjamanLaporan, TLaporanPinjaman } from "@/lib/types/laporan";
@@ -67,12 +47,7 @@ export const getLastIdPinjaman = async (jenis: JenisPinjamanType) => {
   const [result] = await db
     .select({ id: pinjamanTable.noPinjaman })
     .from(pinjamanTable)
-    .where(
-      and(
-        like(pinjamanTable.noPinjaman, keyword),
-        eq(pinjamanTable.jenisPinjman, jenis),
-      ),
-    )
+    .where(and(like(pinjamanTable.noPinjaman, keyword), eq(pinjamanTable.jenisPinjman, jenis)))
     .orderBy(desc(pinjamanTable.noPinjaman))
     .limit(1)
     .execute();
@@ -204,8 +179,7 @@ export const getLastPinjamanById = unstable_cache(
       // const totalSudahBayarValue = Number(angsuran?.total ?? 0);
 
       const totalSudahBayarValue = Math.round(
-        Number(angsuran?.total ?? 0) -
-          admin * (angsuran?.angsuranPinjamanKe ?? 0),
+        Number(angsuran?.total ?? 0) - admin * (angsuran?.angsuranPinjamanKe ?? 0),
       );
 
       const jumlahPinjaman = Number(pinjaman.ajuanPinjaman);
@@ -213,11 +187,9 @@ export const getLastPinjamanById = unstable_cache(
 
       // const totalHarusBayar = jumlahPinjaman + tenor * admin;
       const totalHarusBayar = jumlahPinjaman;
-      const pelunasan = totalHarusBayar - totalSudahBayarValue + admin;
-
-      const persentaseLunas = Number(
-        ((totalSudahBayarValue / totalHarusBayar) * 100).toFixed(2),
-      );
+      const persentaseLunas = Number(((totalSudahBayarValue / totalHarusBayar) * 100).toFixed(2));
+      const pelunasan =
+        totalHarusBayar - totalSudahBayarValue + (persentaseLunas >= 100 ? 0 : admin);
 
       if (persentaseLunas < 50) {
         return {
@@ -305,30 +277,20 @@ export const getMaxJumlahPinjamanById = unstable_cache(
 
       const [pengambilan] = await db
         .select({
-          total: sum(pengambilanSimpananTable.jumlahPengambilanSimpanan).as(
-            "total",
-          ),
+          total: sum(pengambilanSimpananTable.jumlahPengambilanSimpanan).as("total"),
         })
         .from(pengambilanSimpananTable)
         .where(
           and(
             eq(pengambilanSimpananTable.noAnggota, noAnggota),
-            inArray(pengambilanSimpananTable.jenisPengambilanSimpanan, [
-              "WAJIB",
-              "SUKAMANA",
-            ]),
-            inArray(pengambilanSimpananTable.statusPengambilanSimpanan, [
-              "APPROVED",
-              "PENDING",
-            ]),
+            inArray(pengambilanSimpananTable.jenisPengambilanSimpanan, ["WAJIB", "SUKAMANA"]),
+            inArray(pengambilanSimpananTable.statusPengambilanSimpanan, ["APPROVED", "PENDING"]),
           ),
         );
 
       // Normalisasi nilai null ke 0
       const totalSimpanan = simpanan?.total ? Number(simpanan.total) : 0;
-      const totalPengambilan = pengambilan?.total
-        ? Number(pengambilan.total)
-        : 0;
+      const totalPengambilan = pengambilan?.total ? Number(pengambilan.total) : 0;
 
       const sisaSaldo = totalSimpanan - totalPengambilan;
 
@@ -378,14 +340,8 @@ export const getPinjaman = unstable_cache(
           statusPinjaman: pinjamanTable.statusPinjaman,
         })
         .from(pinjamanTable)
-        .leftJoin(
-          anggotaTable,
-          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
-        )
-        .leftJoin(
-          unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
-        )
+        .leftJoin(anggotaTable, eq(pinjamanTable.noAnggota, anggotaTable.noAnggota))
+        .leftJoin(unitKerjaTable, eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja))
         .where(eq(pinjamanTable.jenisPinjman, jenis))
         .orderBy(desc(pinjamanTable.tanggalPinjaman));
 
@@ -425,20 +381,9 @@ export const getPinjamanById = unstable_cache(
           statusPinjaman: pinjamanTable.statusPinjaman,
         })
         .from(pinjamanTable)
-        .leftJoin(
-          anggotaTable,
-          eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
-        )
-        .leftJoin(
-          unitKerjaTable,
-          eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
-        )
-        .where(
-          and(
-            eq(pinjamanTable.jenisPinjman, jenis),
-            eq(pinjamanTable.noAnggota, noAnggota),
-          ),
-        )
+        .leftJoin(anggotaTable, eq(pinjamanTable.noAnggota, anggotaTable.noAnggota))
+        .leftJoin(unitKerjaTable, eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja))
+        .where(and(eq(pinjamanTable.jenisPinjman, jenis), eq(pinjamanTable.noAnggota, noAnggota)))
         .orderBy(desc(pinjamanTable.tanggalPinjaman));
 
       if (result.length > 0) {
@@ -478,16 +423,8 @@ export const getAngsuranById = unstable_cache(
           statusAngsuran: angsuranTable.statusAngsuran,
         })
         .from(angsuranTable)
-        .leftJoin(
-          pinjamanTable,
-          eq(angsuranTable.pinjamanId, pinjamanTable.noPinjaman),
-        )
-        .where(
-          and(
-            eq(angsuranTable.pinjamanId, id),
-            gt(angsuranTable.angsuranPinjamanKe, 0),
-          ),
-        )
+        .leftJoin(pinjamanTable, eq(angsuranTable.pinjamanId, pinjamanTable.noPinjaman))
+        .where(and(eq(angsuranTable.pinjamanId, id), gt(angsuranTable.angsuranPinjamanKe, 0)))
         .orderBy(asc(angsuranTable.angsuranPinjamanKe));
 
       if (result.length > 0) {
@@ -534,18 +471,9 @@ export const getSuratPinjamanById = async (id: string) => {
         jumlahPenghasilan: pinjamanTable.jumlahPenghasilan,
       })
       .from(pinjamanTable)
-      .leftJoin(
-        anggotaTable,
-        eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
-      )
-      .leftJoin(
-        jabatanTable,
-        eq(anggotaTable.jabatanId, jabatanTable.noJabatan),
-      )
-      .leftJoin(
-        unitKerjaTable,
-        eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
-      )
+      .leftJoin(anggotaTable, eq(pinjamanTable.noAnggota, anggotaTable.noAnggota))
+      .leftJoin(jabatanTable, eq(anggotaTable.jabatanId, jabatanTable.noJabatan))
+      .leftJoin(unitKerjaTable, eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja))
       .where(eq(pinjamanTable.noPinjaman, id))
       .limit(1);
 
@@ -569,72 +497,58 @@ export const getLaporanPinjaman = unstable_cache(
         return { ok: false, message: "Invalid field!", data: null };
       }
 
-      const result = await db.transaction<TDataPinjamanLaporan[]>(
-        async (tx) => {
-          const pinjaman = await tx
-            .select({
-              noAnggota: anggotaTable.noAnggota,
-              nama: anggotaTable.namaAnggota,
-              namaUnitKerja: unitKerjaTable.namaUnitKerja,
-              noPinjaman: pinjamanTable.noPinjaman,
-              tanggalPinjaman: pinjamanTable.tanggalPinjaman,
-              ajuanPinjaman: pinjamanTable.ajuanPinjaman,
-              jenisPinjman: pinjamanTable.jenisPinjman,
-              statusPinjaman: pinjamanTable.statusPinjaman,
-              waktuPengembalian: pinjamanTable.waktuPengembalian,
-            })
-            .from(pinjamanTable)
-            .innerJoin(
-              anggotaTable,
-              eq(pinjamanTable.noAnggota, anggotaTable.noAnggota),
-            )
-            .innerJoin(
-              unitKerjaTable,
-              eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja),
-            )
-            .where(
-              and(
-                eq(
-                  pinjamanTable.jenisPinjman,
-                  validateValues.data.jenisPinjaman,
-                ),
-                eq(
-                  pinjamanTable.statusPinjaman,
-                  validateValues.data.statusPinjaman,
-                ),
-              ),
-            );
+      const result = await db.transaction<TDataPinjamanLaporan[]>(async (tx) => {
+        const pinjaman = await tx
+          .select({
+            noAnggota: anggotaTable.noAnggota,
+            nama: anggotaTable.namaAnggota,
+            namaUnitKerja: unitKerjaTable.namaUnitKerja,
+            noPinjaman: pinjamanTable.noPinjaman,
+            tanggalPinjaman: pinjamanTable.tanggalPinjaman,
+            ajuanPinjaman: pinjamanTable.ajuanPinjaman,
+            jenisPinjman: pinjamanTable.jenisPinjman,
+            statusPinjaman: pinjamanTable.statusPinjaman,
+            waktuPengembalian: pinjamanTable.waktuPengembalian,
+          })
+          .from(pinjamanTable)
+          .innerJoin(anggotaTable, eq(pinjamanTable.noAnggota, anggotaTable.noAnggota))
+          .innerJoin(unitKerjaTable, eq(anggotaTable.unitKerjaId, unitKerjaTable.noUnitKerja))
+          .where(
+            and(
+              eq(pinjamanTable.jenisPinjman, validateValues.data.jenisPinjaman),
+              eq(pinjamanTable.statusPinjaman, validateValues.data.statusPinjaman),
+            ),
+          );
 
-          const pinjamanIds = pinjaman.map((p) => p.noPinjaman);
+        const pinjamanIds = pinjaman.map((p) => p.noPinjaman);
 
-          const angsuran = await tx
-            .select({
-              pinjamanId: angsuranTable.pinjamanId,
-              angsuranPinjamanKe: angsuranTable.angsuranPinjamanKe,
-              jumlahAngsuran: angsuranTable.jumlahAngsuran,
-            })
-            .from(angsuranTable)
-            .where(
-              and(
-                inArray(angsuranTable.pinjamanId, pinjamanIds),
-                gt(angsuranTable.angsuranPinjamanKe, 0),
-              ),
-            );
+        const angsuran = await tx
+          .select({
+            pinjamanId: angsuranTable.pinjamanId,
+            angsuranPinjamanKe: angsuranTable.angsuranPinjamanKe,
+            jumlahAngsuran: angsuranTable.jumlahAngsuran,
+          })
+          .from(angsuranTable)
+          .where(
+            and(
+              inArray(angsuranTable.pinjamanId, pinjamanIds),
+              gt(angsuranTable.angsuranPinjamanKe, 0),
+            ),
+          );
 
-          // Step 3: Gabungkan pinjaman + angsuran
-          const combined = pinjaman.map((p) => ({
-            ...p,
-            AngsuranPinjaman: angsuran
-              .filter((a) => a.pinjamanId === p.noPinjaman)
-              .map(({ angsuranPinjamanKe, jumlahAngsuran }) => ({
-                angsuranPinjamanKe,
-                jumlahAngsuran,
-              })),
-          }));
+        // Step 3: Gabungkan pinjaman + angsuran
+        const combined = pinjaman.map((p) => ({
+          ...p,
+          AngsuranPinjaman: angsuran
+            .filter((a) => a.pinjamanId === p.noPinjaman)
+            .map(({ angsuranPinjamanKe, jumlahAngsuran }) => ({
+              angsuranPinjamanKe,
+              jumlahAngsuran,
+            })),
+        }));
 
-          return combined;
-        },
-      );
+        return combined;
+      });
 
       if (!result.length) {
         return {
@@ -683,10 +597,7 @@ export const getCountStatusPinjaman = unstable_cache(
     // Masukkan hasil ke dalam objek result
     grouped.forEach((row) => {
       const jenis = row.jenis.toLowerCase() as "produktif" | "barang";
-      const status = row.status.toUpperCase() as
-        | "PENDING"
-        | "APPROVED"
-        | "COMPLETED";
+      const status = row.status.toUpperCase() as "PENDING" | "APPROVED" | "COMPLETED";
       const jumlah = Number(row.jumlah);
 
       if (result[jenis] && status in result[jenis]) {

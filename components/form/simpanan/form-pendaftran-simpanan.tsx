@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
+  PendaftaranSimpananPetugasSchema,
   PendaftaranSimpananSchema,
   UpdatePendaftaranSimpananSchema,
 } from "@/lib/schema/schema-simpanan";
@@ -30,9 +31,13 @@ import {
 import InputCurrency from "@/components/ui/input-currency";
 import {
   insertPendaftaranSimpanan,
+  insertPendaftaranSimpananPetugas,
   updatePendaftaranSimpanan,
 } from "@/lib/server/action/action-simpanan";
 import { toast } from "sonner";
+import { UserPlus } from "lucide-react";
+import { TAnggotaTrx } from "@/lib/types/anggota";
+import CustomSelect from "@/components/ui/custom-select";
 
 interface FormPendaftaranSimpananProps {
   data: TSettingSimpanan;
@@ -112,6 +117,97 @@ function FormPendaftranSimpanan({ data }: FormPendaftaranSimpananProps) {
   );
 }
 
+interface FormPendaftaranSimpananPetugasProps {
+  data: TSettingSimpanan;
+  anggota: TAnggotaTrx[];
+}
+
+function FormPendaftranSimpananPetugas({
+  data,
+  anggota,
+}: FormPendaftaranSimpananPetugasProps) {
+  const [isPending, startTranssition] = React.useTransition();
+
+  const form = useForm<z.infer<typeof PendaftaranSimpananPetugasSchema>>({
+    resolver: zodResolver(PendaftaranSimpananPetugasSchema),
+    defaultValues: {
+      settingPendaftaranId: data.idSettingPendaftaran,
+      jenisSimpanan: data.jenisPendaftaranSimpanan,
+      jumlahPilihan: 0,
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit = (
+    values: z.infer<typeof PendaftaranSimpananPetugasSchema>,
+  ) => {
+    startTranssition(() => {
+      insertPendaftaranSimpananPetugas(values).then((data) => {
+        if (data.ok) {
+          form.reset();
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      });
+    });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="sm">
+          <UserPlus className="h-4 w-4" />
+          <span className="hidden sm:inline">Tambah Pendaftar</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="h-auto overflow-auto sm:max-w-[425px]">
+        <DialogHeader className="mb-5">
+          <DialogTitle>{data.namaPendaftaran}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <CustomSelect
+              name="noAnggota"
+              label="Anggota"
+              control={form.control}
+              data={anggota}
+              valueKey="noAnggota"
+              labelKey="namaAnggota"
+              required
+            />
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="jumlahPilihan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Jumlah Simpanan {data.jenisPendaftaranSimpanan}
+                    </FormLabel>
+                    <FormControl>
+                      <InputCurrency
+                        name="jumlahPilihan"
+                        control={form.control}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Loading..." : "Simpan"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 interface FormUpdatePendaftranSimpananProps {
   idPendaftar: string;
   jumlah: number;
@@ -133,7 +229,7 @@ function FormUpdatePendaftranSimpanan({
   });
 
   const onSubmit = (
-    values: z.infer<typeof UpdatePendaftaranSimpananSchema>
+    values: z.infer<typeof UpdatePendaftaranSimpananSchema>,
   ) => {
     startTranssition(() => {
       updatePendaftaranSimpanan(values).then((data) => {
@@ -175,4 +271,8 @@ function FormUpdatePendaftranSimpanan({
   );
 }
 
-export { FormPendaftranSimpanan, FormUpdatePendaftranSimpanan };
+export {
+  FormPendaftranSimpanan,
+  FormPendaftranSimpananPetugas,
+  FormUpdatePendaftranSimpanan,
+};

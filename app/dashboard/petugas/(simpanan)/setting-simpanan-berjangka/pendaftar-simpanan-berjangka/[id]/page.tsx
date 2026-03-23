@@ -1,9 +1,11 @@
 import { columnPendaftarSimpanan } from "@/components/columns/column-setting-simpanan";
 import ExportExcell from "@/components/excell/export-excell";
+import { FormPendaftranSimpananPetugas } from "@/components/form/simpanan/form-pendaftran-simpanan";
 import TableWrapper from "@/components/table/table-wrapper";
 import { RenderError } from "@/components/ui/render-error";
 import { LABEL } from "@/lib/constan";
 import { pendaftarSimpananToExcell } from "@/lib/excell-columns";
+import { getAnggotaTrx } from "@/lib/server/data/data-anggota";
 
 import {
   getListPendaftarSimpanan,
@@ -23,12 +25,13 @@ export default async function PendaftarSimpananBerjangka({
     return RenderError("Pendaftar Simpanan Berjangka", "Data Tidak ditemukan.");
   }
 
-  const [pendaftar, setting] = await Promise.all([
+  const [pendaftar, setting, anggota] = await Promise.all([
     getListPendaftarSimpanan(id),
     getSettingSimpananById(id),
+    getAnggotaTrx(),
   ]);
 
-  if (!pendaftar.ok || !pendaftar.data || !setting) {
+  if (!pendaftar.ok || !pendaftar.data || !setting || !anggota.data) {
     return RenderError("Pendaftar Simpanan Berjangka", LABEL.ERROR.DESCRIPTION);
   }
 
@@ -44,13 +47,19 @@ export default async function PendaftarSimpananBerjangka({
         data={pendaftar.data}
         columns={columnPendaftarSimpanan}
       >
-        <ExportExcell
-          data={pendaftar.data}
-          columns={pendaftarSimpananToExcell}
-          title={`List Pendaftar ${setting.namaPendaftaran}`}
-          fileName={`Pendaftar ${setting.namaPendaftaran}`}
-          buttonLabel="Download"
-        />
+        <div className="flex items-end gap-2 ml-auto">
+          <FormPendaftranSimpananPetugas
+            data={setting}
+            anggota={anggota.data}
+          />
+          <ExportExcell
+            data={pendaftar.data}
+            columns={pendaftarSimpananToExcell}
+            title={`List Pendaftar ${setting.namaPendaftaran}`}
+            fileName={`Pendaftar ${setting.namaPendaftaran}`}
+            buttonLabel="Download"
+          />
+        </div>
       </TableWrapper>
     </div>
   );

@@ -39,3 +39,12 @@ export type TAnggotaUser = {
   statusAnggota: StatusAnggotaType;
   role: RoleType;
 };
+
+export type TAnggotaTrx = {
+  noAnggota: string;
+  namaAnggota: string;
+  unitKerjaId: number;
+  namaUnitKerja: string | null;
+  totalSimpanan: number;
+  maxPinjaman: number;
+};

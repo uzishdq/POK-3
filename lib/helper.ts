@@ -565,7 +565,7 @@ export function calculateLoanInstallment(
 
   const maxInstallmentAllowed = calculateTakeHomePay(gaji);
 
-  const monthlyInstallment = pinjaman / waktuPengembalian + admin;
+  const monthlyInstallment = Math.ceil(pinjaman / waktuPengembalian + admin);
 
   const isEligible = monthlyInstallment <= maxInstallmentAllowed;
 

@@ -1,8 +1,4 @@
-import {
-  JenisPinjamanType,
-  StatusAngsuranType,
-  StatusPinjamanType,
-} from "./helper";
+import { JenisPinjamanType, StatusAngsuranType, StatusPinjamanType } from "./helper";
 
 export interface JenisPinjamanOption {
   name: string;
@@ -10,6 +6,11 @@ export interface JenisPinjamanOption {
 }
 
 export interface ICalculateAsuransi {
+  lastPinjaman: {
+    ok: boolean;
+    message: string;
+  };
+  pinjamanId: string;
   totalPremi: number;
   admin: number;
   pelunasan?: number;

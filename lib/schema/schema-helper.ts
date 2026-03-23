@@ -51,11 +51,7 @@ export const idPengambilanSimpananRegex = /^PS-(LB|MA|WB|QB|UB)-\d{6}-\d{3}$/;
 
 export const idPelunasanPinjamanRegex = /^PP-(TF|CH)-\d{6}-\d{3}$/;
 
-export const NumberOrEmptyStringSchema = z.union([
-  z.number(),
-  z.string(),
-  z.literal(""),
-]);
+export const NumberOrEmptyStringSchema = z.union([z.number(), z.string(), z.literal("")]);
 
 export const noAnggotaSchema = z
   .string({ required_error: "tidak boleh kosong" })
@@ -69,10 +65,7 @@ export const validatedStringSchema = (min = 5, max = 50) =>
     .string({ required_error: "tidak boleh kosong" })
     .min(min, `minimal ${min} karakter`)
     .max(max, `maksimal ${max} karakter`)
-    .regex(
-      allowedRegex,
-      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash",
-    );
+    .regex(allowedRegex, "Hanya boleh huruf, angka, spasi, titik, koma, dan slash");
 
 export const basilSchema = z
   .string()
@@ -101,10 +94,7 @@ export const validatedNamaPendaftaranSchema = (min = 5, max = 50) =>
     .string({ required_error: "tidak boleh kosong" })
     .min(min, `minimal ${min} karakter`)
     .max(max, `maksimal ${max} karakter`)
-    .regex(
-      allowedRegex,
-      "Hanya boleh huruf, angka, spasi, titik, koma, dan slash",
-    )
+    .regex(allowedRegex, "Hanya boleh huruf, angka, spasi, titik, koma, dan slash")
     .refine((val) => val.toLowerCase().includes("tabungan"), {
       message: 'Harus mengandung kata "tabungan"',
     })
@@ -149,17 +139,27 @@ export const validatedJumlah = (min = 0, max = 50000000) =>
         return (n >= min && n <= max) || (allowZero && n === 0);
       },
       {
-        message: `jumlah hanya di antara ${formatToIDR(min)} dan ${formatToIDR(
-          max,
-        )}`,
+        message: `jumlah hanya di antara ${formatToIDR(min)} dan ${formatToIDR(max)}`,
       },
     );
 
-export const validatedPengambilanJumlah = (
-  min = 50000,
-  max = 50000000,
-  type: string,
-) =>
+export const validatedJumlahMin = (min = 0) =>
+  z
+    .number({
+      invalid_type_error: "harus angka",
+      required_error: "harus angka",
+    })
+    .refine(
+      (n) => {
+        const allowZero = min === 0;
+        return n >= min || (allowZero && n === 0);
+      },
+      {
+        message: `jumlah minimal ${formatToIDR(min)}`,
+      },
+    );
+
+export const validatedPengambilanJumlah = (min = 50000, max = 50000000, type: string) =>
   z
     .number({
       invalid_type_error: "harus angka",
@@ -214,6 +214,33 @@ export const inputFilePic = z
     return !!file && file.size < 1024 * 1024 * 2;
   }, "ukuran maksimal file 2MB");
 
+export const inputFilePicOpt = z
+  .custom<File>()
+  .refine((file) => {
+    if (!file) return true; // skip validasi jika kosong
+    return typeImage.includes(file.type);
+  }, "file harus berupa image")
+  .refine((file) => {
+    if (!file) return true; // skip validasi jika kosong
+    return file.size < 1024 * 1024 * 2;
+  }, "ukuran maksimal file 2MB")
+  .optional();
+
+export const inputFilePicOptional = z
+  .union([
+    z
+      .custom<File>()
+      .refine((file) => {
+        return !!file && typeImage.includes(file.type);
+      }, "file harus berupa image")
+      .refine((file) => {
+        return !!file && file.size < 1024 * 1024 * 2;
+      }, "ukuran maksimal file 2MB"),
+    z.literal("none"),
+  ])
+  .optional()
+  .transform((val) => val ?? "none");
+
 export const isUuidSchema = z.string().refine((val) => isUUID(val), {
   message: "ID tidak valid",
 });
@@ -226,34 +253,16 @@ export const enumStatusAnggota = ["ACTIVE", "NOTACTIVE"] as const;
 
 export const enumRole = ["ADMIN", "USER", "BENDAHARA", "SEKRETARIS"] as const;
 
-export const enumJenisSimpananBerjangka = [
-  "LEBARAN",
-  "QURBAN",
-  "UBAR",
-] as const;
+export const enumJenisSimpananBerjangka = ["LEBARAN", "QURBAN", "UBAR"] as const;
 
-export const enumJenisPengambilanSimpanan = [
-  "SUKAMANA",
-  "LEBARAN",
-  "QURBAN",
-  "UBAR",
-] as const;
+export const enumJenisPengambilanSimpanan = ["SUKAMANA", "LEBARAN", "QURBAN", "UBAR"] as const;
 
-export const enumStatusPengambilanSimpanan = [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-] as const;
+export const enumStatusPengambilanSimpanan = ["PENDING", "APPROVED", "REJECTED"] as const;
 
 export const enumStatusPendaftaran = ["OPEN", "CLOSE"] as const;
 
 export const enumPinjaman = ["PRODUKTIF", "BARANG"] as const;
-export const enumStatusPinjaman = [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-  "COMPLETED",
-] as const;
+export const enumStatusPinjaman = ["PENDING", "APPROVED", "REJECTED", "COMPLETED"] as const;
 
 export const enumJenisPelunasanPinjaman = ["CASH", "TRANSFER"] as const;
 export const enumStatusPelunasanPinjaman = [
@@ -263,8 +272,4 @@ export const enumStatusPelunasanPinjaman = [
   "COMPLETED",
 ] as const;
 
-export const enumStatusPengunduran = [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-] as const;
+export const enumStatusPengunduran = ["PENDING", "APPROVED", "REJECTED"] as const;

@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 import {
   PembagianSimpananSchema,
+  PendaftaranSimpananPetugasSchema,
   PendaftaranSimpananSchema,
   SettingSimpananSchema,
   SettingSimpananUpdateOrDeleteSchema,
@@ -333,6 +334,94 @@ export const insertPendaftaranSimpanan = async (
     };
   } catch (error) {
     console.error("error insert pendaftaran simpanan : ", error);
+    return {
+      ok: false,
+      message: LABEL.ERROR.SERVER,
+    };
+  }
+};
+
+export const insertPendaftaranSimpananPetugas = async (
+  values: z.infer<typeof PendaftaranSimpananPetugasSchema>,
+) => {
+  try {
+    const session = await auth();
+
+    if (
+      !session?.user.noAnggota ||
+      !session?.user.role ||
+      session?.user.role === "USER"
+    ) {
+      return {
+        ok: false,
+        message:
+          !session?.user.noAnggota || !session?.user.role
+            ? LABEL.ERROR.NOT_LOGIN
+            : LABEL.ERROR.UNAUTHORIZED,
+      };
+    }
+
+    const validateValues = PendaftaranSimpananPetugasSchema.safeParse(values);
+
+    if (!validateValues.success) {
+      return { ok: false, message: LABEL.ERROR.INVALID_FIELD };
+    }
+
+    const [isDaftar] = await db
+      .select({ idPendaftar: pendaftaranSimpananTable.idPendaftar })
+      .from(pendaftaranSimpananTable)
+      .where(
+        and(
+          eq(
+            pendaftaranSimpananTable.settingPendaftaranId,
+            validateValues.data.settingPendaftaranId,
+          ),
+          eq(pendaftaranSimpananTable.noAnggota, validateValues.data.noAnggota),
+        ),
+      );
+
+    if (isDaftar) {
+      return {
+        ok: false,
+        message: "pendaftaran gagal, anggota sudah terdaftar",
+      };
+    }
+
+    const [result] = await db
+      .insert(pendaftaranSimpananTable)
+      .values({
+        settingPendaftaranId: validateValues.data.settingPendaftaranId,
+        noAnggota: validateValues.data.noAnggota,
+        jumlahPilihan: validateValues.data.jumlahPilihan?.toString(),
+      })
+      .returning();
+
+    if (!result) {
+      return {
+        ok: false,
+        message: "pendaftaran gagal",
+      };
+    }
+
+    const tagsToRevalidate = Array.from(
+      new Set([
+        ...tagsNumberRevalidate,
+        ...tagsNotifikasiRevalidate,
+        ...tagsSimpananRevalidate,
+        ...tagsPendaftaranSimpananRevalidate,
+        ...tagsPengambilanSimpananRevalidate,
+        ...tagsPotonganRevalidate,
+      ]),
+    );
+
+    tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+
+    return {
+      ok: true,
+      message: "pendaftaran berhasil",
+    };
+  } catch (error) {
+    console.error("error insert pendaftaran simpanan petugas: ", error);
     return {
       ok: false,
       message: LABEL.ERROR.SERVER,

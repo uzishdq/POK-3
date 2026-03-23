@@ -5,6 +5,7 @@ import {
   enumStatusPendaftaran,
   idPengambilanSimpananRegex,
   isUuidSchema,
+  noAnggotaSchema,
   validatedJumlah,
   validatedNamaPendaftaranSchema,
 } from "./schema-helper";
@@ -49,6 +50,13 @@ export const PembagianSimpananSchema = z.object({
 
 export const PendaftaranSimpananSchema = z.object({
   settingPendaftaranId: isUuidSchema,
+  jenisSimpanan: z.enum(enumJenisSimpananBerjangka),
+  jumlahPilihan: validatedJumlah(15000, 1500000),
+});
+
+export const PendaftaranSimpananPetugasSchema = z.object({
+  settingPendaftaranId: isUuidSchema,
+  noAnggota: noAnggotaSchema,
   jenisSimpanan: z.enum(enumJenisSimpananBerjangka),
   jumlahPilihan: validatedJumlah(15000, 1500000),
 });
