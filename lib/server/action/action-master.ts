@@ -40,10 +40,9 @@ export const insertMaster = async (values: z.infer<typeof MasterSchema>) => {
       .insert(masterTable)
       .values({
         nikMaster: validateValues.data.nikMaster,
-        nipMaster:
-          validateValues.data.nipMaster === ""
-            ? null
-            : validateValues.data.nipMaster,
+        nipMaster: validateValues.data.nipMaster?.trim()
+          ? validateValues.data.nipMaster
+          : null,
         namaMaster: validateValues.data.namaMaster,
         tanggalLahirMaster: validateValues.data.tanggalLahirMaster,
         tempatLahirMaster: validateValues.data.tempatLahirMaster,
@@ -80,7 +79,7 @@ export const insertMaster = async (values: z.infer<typeof MasterSchema>) => {
 };
 
 export const updateMaster = async (
-  values: z.infer<typeof MasterUpdateOrDeleteSchema>
+  values: z.infer<typeof MasterUpdateOrDeleteSchema>,
 ) => {
   try {
     const session = await auth();
@@ -147,7 +146,7 @@ export const updateMaster = async (
 };
 
 export const deleteMaster = async (
-  values: z.infer<typeof MasterUpdateOrDeleteSchema>
+  values: z.infer<typeof MasterUpdateOrDeleteSchema>,
 ) => {
   try {
     const session = await auth();

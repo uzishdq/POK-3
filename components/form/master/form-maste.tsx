@@ -52,7 +52,7 @@ function FormMaster({ values, jabatan, unitkerja }: MasterFormProps) {
   const form = useForm<z.infer<typeof MasterSchema>>({
     resolver: zodResolver(MasterSchema),
     defaultValues: {
-      nikMaster: "",
+      nikMaster: undefined,
       nipMaster: "",
       namaMaster: "",
       tanggalLahirMaster: "",
