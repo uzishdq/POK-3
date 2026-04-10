@@ -42,8 +42,8 @@ export const updateProfile = async (values: z.infer<typeof ProfileSchema>) => {
         alamatAnggota: validateValues.data.alamatAnggota,
         noTelpAnggota: validateValues.data.noTelpAnggota,
         statusPekerjaan: validateValues.data.statusPekerjaan,
-        jabatanId: validateValues.data.jabatanId,
-        unitKerjaId: validateValues.data.unitKerjaId,
+        jabatanId: Number(validateValues.data.jabatanId),
+        unitKerjaId: Number(validateValues.data.unitKerjaId),
         bankAnggota: validateValues.data.bankAnggota,
         rekeningAnggota: validateValues.data.rekeningAnggota,
         pilihanSukamana: validateValues.data.pilihanSukamana?.toString(),
@@ -59,11 +59,7 @@ export const updateProfile = async (values: z.infer<typeof ProfileSchema>) => {
     }
 
     const tagsToRevalidate = Array.from(
-      new Set([
-        ...tagsNumberRevalidate,
-        ...tagsAnggotaRevalidate,
-        ...tagsPotonganRevalidate,
-      ])
+      new Set([...tagsNumberRevalidate, ...tagsAnggotaRevalidate, ...tagsPotonganRevalidate]),
     );
 
     tagsToRevalidate.forEach((tag) => revalidateTag(tag));

@@ -8,13 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { ProfileSchema } from "@/lib/schema/schema-profile";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -46,11 +40,7 @@ interface IProfileForm {
   unitKerja: TUnitKerja[] | null;
 }
 
-export default function ProfileForm({
-  data,
-  jabatan,
-  unitKerja,
-}: IProfileForm) {
+export default function ProfileForm({ data, jabatan, unitKerja }: IProfileForm) {
   const [isPending, startTranssition] = React.useTransition();
 
   const form = useForm<z.infer<typeof ProfileSchema>>({
@@ -65,8 +55,8 @@ export default function ProfileForm({
       alamatAnggota: data.alamatAnggota,
       noTelpAnggota: data.noTelpAnggota,
       statusPekerjaan: data.statusPekerjaan,
-      jabatanId: data.jabatanId,
-      unitKerjaId: data.unitKerjaId,
+      jabatanId: data.jabatanId.toString(),
+      unitKerjaId: data.unitKerjaId.toString(),
       bankAnggota: data.bankAnggota,
       rekeningAnggota: data.rekeningAnggota,
       pilihanSukamana: data.pilihanSukamana ? Number(data.pilihanSukamana) : 0,
@@ -90,8 +80,7 @@ export default function ProfileForm({
       <CardHeader>
         <CardTitle>Data Anggota</CardTitle>
         <CardDescription>
-          Pastikan data Anda sudah benar. Jika sudah sesuai, tidak perlu
-          mengedit atau mengubahnya.
+          Pastikan data Anda sudah benar. Jika sudah sesuai, tidak perlu mengedit atau mengubahnya.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -157,10 +146,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Jabatan</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih Jabatan Anda" />
@@ -169,10 +155,7 @@ export default function ProfileForm({
                         <SelectContent>
                           {jabatan
                             ? jabatan.map((item, index) => (
-                                <SelectItem
-                                  key={index}
-                                  value={item.noJabatan.toString()}
-                                >
+                                <SelectItem key={index} value={item.noJabatan.toString()}>
                                   {item.namaJabatan}
                                 </SelectItem>
                               ))
@@ -191,10 +174,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Unit Kerja</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih Unit Kerja Anda" />
@@ -203,10 +183,7 @@ export default function ProfileForm({
                         <SelectContent>
                           {unitKerja
                             ? unitKerja.map((item, index) => (
-                                <SelectItem
-                                  key={index}
-                                  value={item.noUnitKerja.toString()}
-                                >
+                                <SelectItem key={index} value={item.noUnitKerja.toString()}>
                                   {item.namaUnitKerja}
                                 </SelectItem>
                               ))
@@ -261,10 +238,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Jenis Kelamin</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih Jenis Kelamin Anda" />
@@ -290,10 +264,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status Pekerjaan</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih Status Pekerjaan Anda" />
@@ -322,10 +293,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Nama Bank</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Pilih Bank Anda" />
@@ -386,10 +354,7 @@ export default function ProfileForm({
                     <FormItem>
                       <FormLabel>Pilihan Simpanan Sukamana</FormLabel>
                       <FormControl>
-                        <InputCurrency
-                          name="pilihanSukamana"
-                          control={form.control}
-                        />
+                        <InputCurrency name="pilihanSukamana" control={form.control} />
                       </FormControl>
                       <FormMessage />
                       <FormDescription>
