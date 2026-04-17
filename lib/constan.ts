@@ -307,6 +307,10 @@ export const BANK = [
     name: "PANIN BANK",
     value: "PANIN BANK",
   },
+  {
+    name: "SEA BANK",
+    value: "SEA BANK",
+  },
 ];
 
 export const PEKERJAAN = [
