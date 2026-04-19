@@ -21,7 +21,11 @@ import {
 } from "@/lib/helper";
 import { ICalculateAsuransi } from "@/lib/types/pinjaman";
 import { getTanggalLahirById } from "../data/data-anggota";
-import { getLastIdAngsuran, getLastIdPinjaman, getLastPinjamanById } from "../data/data-pinjaman";
+import {
+  getLastIdAngsuran,
+  getLastIdPinjaman,
+  getLastPinjamanById,
+} from "../data/data-pinjaman";
 import { uploadImage } from "./action-upload-image";
 import { getLastIdAsuransi } from "../data/data-asuransi";
 import { angsuranTable, asuransiTable, pinjamanTable } from "@/lib/db/schema";
@@ -44,13 +48,25 @@ export const validasiPinjaman = async (limit: number, values: unknown) => {
       return { ok: false, message: LABEL.ERROR.INVALID_FIELD, data: null };
     }
 
-    const { ajuanPinjaman, jumlahPenghasilan, waktuPengembalian, noAnggota, jenisPinjaman } =
-      validateValues.data;
+    const {
+      ajuanPinjaman,
+      jumlahPenghasilan,
+      waktuPengembalian,
+      noAnggota,
+      jenisPinjaman,
+    } = validateValues.data;
 
-    const angsuran = calculateLoanInstallment(jumlahPenghasilan, ajuanPinjaman, waktuPengembalian);
+    const angsuran = calculateLoanInstallment(
+      jumlahPenghasilan,
+      ajuanPinjaman,
+      waktuPengembalian,
+    );
 
     if (!angsuran.isEligible) {
-      const prediksi = predictLoanBasedOnSalary(jumlahPenghasilan, ajuanPinjaman);
+      const prediksi = predictLoanBasedOnSalary(
+        jumlahPenghasilan,
+        ajuanPinjaman,
+      );
 
       const monthlyLimit = prediksi.monthlyInstallment;
 
@@ -82,7 +98,8 @@ export const validasiPinjaman = async (limit: number, values: unknown) => {
       if (tanggalLahir.data === null) {
         return {
           ok: false,
-          message: "Tanggal lahir tidak valid. Silakan perbarui di profil Anda.",
+          message:
+            "Tanggal lahir tidak valid. Silakan perbarui di profil Anda.",
           data: null,
         };
       }
@@ -114,12 +131,21 @@ export const validasiPinjaman = async (limit: number, values: unknown) => {
             admin: angsuran.admin,
             pelunasan: pelunasanValue,
             monthlyInstallment: angsuran.monthlyInstallment,
-            receive: countReceive(ajuanPinjaman, angsuran.admin, 0, pelunasanValue),
+            receive: countReceive(
+              ajuanPinjaman,
+              angsuran.admin,
+              0,
+              pelunasanValue,
+            ),
           },
         };
       }
 
-      const asuransi = calculateAsuransi(tanggalLahir.data, waktuPengembalian, ajuanPinjaman);
+      const asuransi = calculateAsuransi(
+        tanggalLahir.data,
+        waktuPengembalian,
+        ajuanPinjaman,
+      );
 
       if (!asuransi.status) {
         return { ok: false, message: asuransi.message, data: null };
@@ -135,7 +161,12 @@ export const validasiPinjaman = async (limit: number, values: unknown) => {
         admin: angsuran.admin,
         pelunasan: pelunasanValue,
         monthlyInstallment: angsuran.monthlyInstallment,
-        receive: countReceive(ajuanPinjaman, angsuran.admin, asuransi.totalPremi, pelunasanValue),
+        receive: countReceive(
+          ajuanPinjaman,
+          angsuran.admin,
+          asuransi.totalPremi,
+          pelunasanValue,
+        ),
       };
 
       return {
@@ -188,7 +219,11 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
       };
     }
 
-    const angsuran = calculateLoanInstallment(jumlahPenghasilan, ajuanPinjaman, waktuPengembalian);
+    const angsuran = calculateLoanInstallment(
+      jumlahPenghasilan,
+      ajuanPinjaman,
+      waktuPengembalian,
+    );
 
     if (!angsuran.isEligible) {
       return {
@@ -197,14 +232,19 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
       };
     }
 
-    const [tanggalLahir, lastPinjaman, lastIdPinjaman, lastIdAngsuran, lastIdAsuransi] =
-      await Promise.all([
-        getTanggalLahirById(noAnggota),
-        getLastPinjamanById(noAnggota, jenisPinjaman, "APPROVED"),
-        getLastIdPinjaman(jenisPinjaman),
-        getLastIdAngsuran(),
-        getLastIdAsuransi(),
-      ]);
+    const [
+      tanggalLahir,
+      lastPinjaman,
+      lastIdPinjaman,
+      lastIdAngsuran,
+      lastIdAsuransi,
+    ] = await Promise.all([
+      getTanggalLahirById(noAnggota),
+      getLastPinjamanById(noAnggota, jenisPinjaman, "APPROVED"),
+      getLastIdPinjaman(jenisPinjaman),
+      getLastIdAngsuran(),
+      getLastIdAsuransi(),
+    ]);
 
     if (!tanggalLahir.data) {
       return {
@@ -238,7 +278,11 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
     let asuransiData = null;
 
     if (jenisPinjaman === "PRODUKTIF") {
-      const asuransi = calculateAsuransi(tanggalLahir.data, waktuPengembalian, ajuanPinjaman);
+      const asuransi = calculateAsuransi(
+        tanggalLahir.data,
+        waktuPengembalian,
+        ajuanPinjaman,
+      );
 
       if (!asuransi.status) {
         return { ok: false, message: asuransi.message };
@@ -265,7 +309,12 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
       waktuPengembalian,
       jenisPinjman: jenisPinjaman,
       ajuanPinjaman: ajuanPinjaman.toString(),
-      jumlahDiterima: countReceive(ajuanPinjaman, angsuran.admin, premi, pelunasanValue).toString(),
+      jumlahDiterima: countReceive(
+        ajuanPinjaman,
+        angsuran.admin,
+        premi,
+        pelunasanValue,
+      ).toString(),
       strukGaji: struk.imageUrl,
       jumlahPenghasilan: jumlahPenghasilan.toString(),
     };
@@ -279,7 +328,10 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
     };
 
     const result = await db.transaction(async (tx) => {
-      const [insertPinjaman] = await tx.insert(pinjamanTable).values(dataPinjaman).returning();
+      const [insertPinjaman] = await tx
+        .insert(pinjamanTable)
+        .values(dataPinjaman)
+        .returning();
 
       if (!insertPinjaman) {
         return null;
@@ -322,7 +374,10 @@ export const insertPinjaman = async (limit: number, values: unknown) => {
   }
 };
 
-export const validasiTambahPinjaman = async (limit: number, values: unknown) => {
+export const validasiTambahPinjaman = async (
+  limit: number,
+  values: unknown,
+) => {
   try {
     const schema = TambahPinjamanSchema(limit);
     const validateValues = schema.safeParse(values);
@@ -331,13 +386,25 @@ export const validasiTambahPinjaman = async (limit: number, values: unknown) => 
       return { ok: false, message: LABEL.ERROR.INVALID_FIELD, data: null };
     }
 
-    const { ajuanPinjaman, jumlahPenghasilan, waktuPengembalian, noAnggota, jenisPinjaman } =
-      validateValues.data;
+    const {
+      ajuanPinjaman,
+      jumlahPenghasilan,
+      waktuPengembalian,
+      noAnggota,
+      jenisPinjaman,
+    } = validateValues.data;
 
-    const angsuran = calculateLoanInstallment(jumlahPenghasilan, ajuanPinjaman, waktuPengembalian);
+    const angsuran = calculateLoanInstallment(
+      jumlahPenghasilan,
+      ajuanPinjaman,
+      waktuPengembalian,
+    );
 
     if (!angsuran.isEligible) {
-      const prediksi = predictLoanBasedOnSalary(jumlahPenghasilan, ajuanPinjaman);
+      const prediksi = predictLoanBasedOnSalary(
+        jumlahPenghasilan,
+        ajuanPinjaman,
+      );
 
       const monthlyLimit = prediksi.monthlyInstallment;
 
@@ -398,12 +465,21 @@ export const validasiTambahPinjaman = async (limit: number, values: unknown) => 
             admin: angsuran.admin,
             pelunasan: pelunasanValue,
             monthlyInstallment: angsuran.monthlyInstallment,
-            receive: countReceive(ajuanPinjaman, angsuran.admin, 0, pelunasanValue),
+            receive: countReceive(
+              ajuanPinjaman,
+              angsuran.admin,
+              0,
+              pelunasanValue,
+            ),
           },
         };
       }
 
-      const asuransi = calculateAsuransi(tanggalLahir.data, waktuPengembalian, ajuanPinjaman);
+      const asuransi = calculateAsuransi(
+        tanggalLahir.data,
+        waktuPengembalian,
+        ajuanPinjaman,
+      );
 
       if (!asuransi.status) {
         return { ok: false, message: asuransi.message, data: null };
@@ -419,7 +495,12 @@ export const validasiTambahPinjaman = async (limit: number, values: unknown) => 
         admin: angsuran.admin,
         pelunasan: pelunasanValue,
         monthlyInstallment: angsuran.monthlyInstallment,
-        receive: countReceive(ajuanPinjaman, angsuran.admin, asuransi.totalPremi, pelunasanValue),
+        receive: countReceive(
+          ajuanPinjaman,
+          angsuran.admin,
+          asuransi.totalPremi,
+          pelunasanValue,
+        ),
       };
 
       return {
@@ -442,7 +523,11 @@ export const tambahPinjaman = async (limit: number, values: unknown) => {
   try {
     const session = await auth();
 
-    if (!session?.user.noAnggota || !session?.user.role || session?.user.role === "USER") {
+    if (
+      !session?.user.noAnggota ||
+      !session?.user.role ||
+      session?.user.role === "USER"
+    ) {
       return {
         ok: false,
         message:
@@ -484,14 +569,19 @@ export const tambahPinjaman = async (limit: number, values: unknown) => {
       };
     }
 
-    const [tanggalLahir, lastPinjaman, lastIdPinjaman, lastIdAngsuran, lastIdAsuransi] =
-      await Promise.all([
-        getTanggalLahirById(noAnggota),
-        getLastPinjamanById(noAnggota, jenisPinjaman, "APPROVED"),
-        getLastIdPinjaman(jenisPinjaman),
-        getLastIdAngsuran(),
-        getLastIdAsuransi(),
-      ]);
+    const [
+      tanggalLahir,
+      lastPinjaman,
+      lastIdPinjaman,
+      lastIdAngsuran,
+      lastIdAsuransi,
+    ] = await Promise.all([
+      getTanggalLahirById(noAnggota),
+      getLastPinjamanById(noAnggota, jenisPinjaman, "APPROVED"),
+      getLastIdPinjaman(jenisPinjaman),
+      getLastIdAngsuran(),
+      getLastIdAsuransi(),
+    ]);
 
     if (!tanggalLahir.data) {
       return {
@@ -530,7 +620,11 @@ export const tambahPinjaman = async (limit: number, values: unknown) => {
     let updateAngsuran = null;
 
     if (jenisPinjaman === "PRODUKTIF") {
-      const asuransi = calculateAsuransi(tanggalLahir.data, waktuPengembalian, ajuanPinjaman);
+      const asuransi = calculateAsuransi(
+        tanggalLahir.data,
+        waktuPengembalian,
+        ajuanPinjaman,
+      );
 
       if (!asuransi.status) {
         return { ok: false, message: asuransi.message };
@@ -549,9 +643,17 @@ export const tambahPinjaman = async (limit: number, values: unknown) => {
         premi,
       };
 
-      if (["BELUM_LUNAS", "SUDAH_LUNAS_SEBAGIAN"].includes(lastPinjaman.status)) {
-        if (!lastPinjaman.data?.angsuranKe || !lastPinjaman.data?.angsuranDari) {
-          return { ok: false, message: "Data angsuran sebelumnya tidak ditemukan" };
+      if (
+        ["BELUM_LUNAS", "SUDAH_LUNAS_SEBAGIAN"].includes(lastPinjaman.status)
+      ) {
+        if (
+          !lastPinjaman.data?.angsuranKe ||
+          !lastPinjaman.data?.angsuranDari
+        ) {
+          return {
+            ok: false,
+            message: "Data angsuran sebelumnya tidak ditemukan",
+          };
         }
 
         updatePinjaman = true;
@@ -602,34 +704,44 @@ export const tambahPinjaman = async (limit: number, values: unknown) => {
               angsuranPinjamanKe: 0,
               angsuranPinjamanDari: waktuPengembalian,
               jumlahAngsuran: calculateAngsuran.monthlyInstallment.toString(),
+              statusAngsuran: "ONPROGRESS" as StatusAngsuranType,
             },
           ];
 
     const result = await db.transaction(async (tx) => {
-      if (updatePinjaman && updateAngsuran) {
-        const [isCompleted] = await tx
-          .update(pinjamanTable)
-          .set({ statusPinjaman: "COMPLETED" })
-          .where(eq(pinjamanTable.noPinjaman, updateAngsuran.pinjamanId))
+      try {
+        if (updatePinjaman && updateAngsuran) {
+          const [isCompleted] = await tx
+            .update(pinjamanTable)
+            .set({ statusPinjaman: "COMPLETED" })
+            .where(eq(pinjamanTable.noPinjaman, updateAngsuran.pinjamanId))
+            .returning();
+
+          if (!isCompleted)
+            throw new Error("Gagal menyelesaikan pinjaman sebelumnya");
+
+          await tx.insert(angsuranTable).values(updateAngsuran);
+          // tidak return isCompleted, biarkan lanjut ke bawah
+        }
+
+        const [insertPinjaman] = await tx
+          .insert(pinjamanTable)
+          .values(dataPinjaman)
           .returning();
 
-        if (!isCompleted) throw new Error("Gagal menyelesaikan pinjaman sebelumnya");
+        if (!insertPinjaman) throw new Error("Gagal menyimpan data pinjaman");
 
-        await tx.insert(angsuranTable).values(updateAngsuran);
-        // tidak return isCompleted, biarkan lanjut ke bawah
+        await tx.insert(angsuranTable).values(dataAngsuran);
+
+        if (asuransiData) {
+          await tx.insert(asuransiTable).values(asuransiData);
+        }
+
+        return insertPinjaman;
+      } catch (err) {
+        console.error("Error di dalam transaction:", err); // ← tambah ini
+        throw err; // pastikan di-rethrow
       }
-
-      const [insertPinjaman] = await tx.insert(pinjamanTable).values(dataPinjaman).returning();
-
-      if (!insertPinjaman) throw new Error("Gagal menyimpan data pinjaman");
-
-      await tx.insert(angsuranTable).values(dataAngsuran);
-
-      if (asuransiData) {
-        await tx.insert(asuransiTable).values(asuransiData);
-      }
-
-      return insertPinjaman;
     });
 
     if (!result) {
@@ -686,16 +798,22 @@ export const updateStatusPinjaman = async (values: unknown) => {
       return { ok: false, message: LABEL.ERROR.INVALID_FIELD };
     }
 
-    const { pinjamanId, noAnggota, jenisPinjaman, action } = validateValues.data;
+    const { pinjamanId, noAnggota, jenisPinjaman, action } =
+      validateValues.data;
 
     if (action === "APPROVED") {
-      const lastPinjaman = await getLastPinjamanById(noAnggota, jenisPinjaman, "APPROVED");
+      const lastPinjaman = await getLastPinjamanById(
+        noAnggota,
+        jenisPinjaman,
+        "APPROVED",
+      );
 
       // berikan notif kalau pinjaman sudah selesai
       if (lastPinjaman.data && lastPinjaman.status === "SUDAH_LUNAS_SEBAGIAN") {
         const lastIdAngsuran = await getLastIdAngsuran();
 
-        const { pinjamanId, angsuranKe, angsuranDari, pelunasan } = lastPinjaman.data;
+        const { pinjamanId, angsuranKe, angsuranDari, pelunasan } =
+          lastPinjaman.data;
 
         await db.transaction(async (tx) => {
           await tx

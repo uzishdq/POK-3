@@ -73,7 +73,9 @@ const tambahPinjamanSchema = (limit: number) =>
     .refine(
       (data) => {
         if (!data.angsuran || data.angsuran.length === 0) return true;
-        return data.angsuran.every((item) => item.keAngsuran <= data.waktuPengembalian);
+        return data.angsuran.every(
+          (item) => item.keAngsuran <= data.waktuPengembalian,
+        );
       },
       {
         message: "Angsuran ke tidak boleh melebihi waktu pengembalian",

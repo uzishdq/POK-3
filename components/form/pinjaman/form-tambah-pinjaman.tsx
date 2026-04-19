@@ -32,7 +32,10 @@ import { Input } from "@/components/ui/input";
 import InputCurrency from "@/components/ui/input-currency";
 import { Button } from "@/components/ui/button";
 import CustomSelect from "@/components/ui/custom-select";
-import { tambahPinjaman, validasiTambahPinjaman } from "@/lib/server/action/action-pinjaman";
+import {
+  tambahPinjaman,
+  validasiTambahPinjaman,
+} from "@/lib/server/action/action-pinjaman";
 import { toast } from "sonner";
 import FormStatus from "../form-status";
 import { Switch } from "@/components/ui/switch";
@@ -41,13 +44,19 @@ interface FormTambahPinjamanProps {
   anggota: TAnggotaTrx[];
 }
 
-export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps) {
+export default function FormTambahPinjaman({
+  anggota,
+}: FormTambahPinjamanProps) {
   const [isPending, startTranssition] = React.useTransition();
   const [maxLimit, setMaxLimit] = React.useState<number>(0);
   const [maxAjuanPinjaman, setMaxAjuanPinjaman] = React.useState<number>(0);
-  const [biayaPinjaman, setBiayaPinjaman] = React.useState<ICalculateAsuransi | null>(null);
+  const [biayaPinjaman, setBiayaPinjaman] =
+    React.useState<ICalculateAsuransi | null>(null);
   const [isValid, setIsValid] = React.useState(false);
-  const [validasi, setValidasi] = React.useState<{ ok: boolean; message: string } | null>(null);
+  const [validasi, setValidasi] = React.useState<{
+    ok: boolean;
+    message: string;
+  } | null>(null);
   const TambahPinjamanSchemaForm = TambahPinjamanSchema(maxAjuanPinjaman);
 
   const form = useForm<z.infer<typeof TambahPinjamanSchemaForm>>({
@@ -161,32 +170,43 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
         </CardTitle>
         <ul className="mt-3 list-decimal pl-4 pt-4 text-sm text-muted-foreground">
           <li className="mb-4 text-justify">
-            Besaran pinjaman maksimal adalah 15 kali dari jumlah simpanan wajib dan manasuka, dengan
-            catatan besaran pinjaman tidak boleh melebihi 50 juta.
+            Besaran pinjaman maksimal adalah 15 kali dari jumlah simpanan wajib
+            dan manasuka, dengan catatan besaran pinjaman tidak boleh melebihi
+            50 juta.
           </li>
           <li className="mb-4 text-justify">
-            Besaran pinjaman yang dapat disetujui berdasarkan kemampuan angsuran masing-masing
-            anggota perbulan dan ketentuan batasan minimum “Take Home Pay” (THP) <b>35%</b> dari
-            Gaji Bersih.
+            Besaran pinjaman yang dapat disetujui berdasarkan kemampuan angsuran
+            masing-masing anggota perbulan dan ketentuan batasan minimum “Take
+            Home Pay” (THP) <b>35%</b> dari Gaji Bersih.
           </li>
           <li className="mb-4 text-justify">Struk Gaji terakhir.</li>
 
-          <li className="mb-2 text-justify">Biaya yang dikenakan sekali pada saat penarikan :</li>
+          <li className="mb-2 text-justify">
+            Biaya yang dikenakan sekali pada saat penarikan :
+          </li>
           <ul className="list-disc pl-4">
             <li className="mb-2 text-justify">
               Biaya administrasi sebesar <b>1%</b> dari jumlah pinjaman.
             </li>
             <li className="mb-2 text-justify">
-              Biaya premi asuransi jiwa, dihitung berdasarkan usia dan jangka waktu pinjaman.
+              Biaya premi asuransi jiwa, dihitung berdasarkan usia dan jangka
+              waktu pinjaman.
             </li>
           </ul>
         </ul>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(isValid ? onSubmit : onValidate)} className="space-y-4">
-            {validasi && <FormStatus status={validasi.ok} message={validasi.message} />}
-            {biayaPinjaman && <CardDetailPengajuanPinjaman data={biayaPinjaman} />}
+          <form
+            onSubmit={form.handleSubmit(isValid ? onSubmit : onValidate)}
+            className="space-y-4"
+          >
+            {validasi && (
+              <FormStatus status={validasi.ok} message={validasi.message} />
+            )}
+            {biayaPinjaman && (
+              <CardDetailPengajuanPinjaman data={biayaPinjaman} />
+            )}
 
             <CustomSelect
               name="noAnggota"
@@ -267,7 +287,9 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                           type="number"
                           {...field}
                           value={isNaN(field.value) ? "" : field.value}
-                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
                         />
                         <span>bulan</span>
                       </div>
@@ -285,7 +307,10 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                   <FormItem>
                     <FormLabel>Besaran Pinjaman</FormLabel>
                     <FormControl>
-                      <InputCurrency name="ajuanPinjaman" control={form.control} />
+                      <InputCurrency
+                        name="ajuanPinjaman"
+                        control={form.control}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -311,7 +336,9 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                       />
                     </FormControl>
                     <FormMessage />
-                    <FormDescription>jpg/jpeg/png & maks 2MB (opsional)</FormDescription>
+                    <FormDescription>
+                      jpg/jpeg/png & maks 2MB (opsional)
+                    </FormDescription>
                   </FormItem>
                 )}
               />
@@ -324,7 +351,10 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                   <FormItem>
                     <FormLabel>Penghasilan Berdasarkan Struk Gaji</FormLabel>
                     <FormControl>
-                      <InputCurrency name="jumlahPenghasilan" control={form.control} />
+                      <InputCurrency
+                        name="jumlahPenghasilan"
+                        control={form.control}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -343,7 +373,10 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                     </p>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -353,14 +386,20 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
             {isAngsuran && (
               <div className="space-y-4">
                 {fields.map((item, index) => (
-                  <div key={item.id} className="rounded-lg border p-4 space-y-4">
+                  <div
+                    key={item.id}
+                    className="rounded-lg border p-4 space-y-4"
+                  >
                     <div className="flex items-center justify-between">
-                      <p className="font-medium text-sm">Angsuran ke-{index + 1}</p>
+                      <p className="font-medium text-sm">
+                        Angsuran ke-{index + 1}
+                      </p>
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleRemove(index)}>
+                        onClick={() => handleRemove(index)}
+                      >
                         Hapus
                       </Button>
                     </div>
@@ -425,7 +464,8 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                   variant="outline"
                   className="w-full"
                   onClick={() => {
-                    const waktuPengembalian = form.getValues("waktuPengembalian");
+                    const waktuPengembalian =
+                      form.getValues("waktuPengembalian");
 
                     // Jika waktuPengembalian belum diisi
                     if (!waktuPengembalian) {
@@ -447,21 +487,25 @@ export default function FormTambahPinjaman({ anggota }: FormTambahPinjamanProps)
                       keAngsuran: fields.length + 1,
                       jumlahAngsuran: 0,
                     });
-                  }}>
+                  }}
+                >
                   + Tambah Angsuran
                 </Button>
               </div>
             )}
 
             {form.formState.errors.angsuran && (
-              <p className="text-sm text-destructive">{form.formState.errors.angsuran.message}</p>
+              <p className="text-sm text-destructive">
+                {form.formState.errors.angsuran.message}
+              </p>
             )}
 
             <Button
               type="submit"
               disabled={isPending}
               className="w-full"
-              variant={isValid ? "default" : "destructive"}>
+              variant={isValid ? "default" : "destructive"}
+            >
               {isPending
                 ? "Loading..."
                 : isValid

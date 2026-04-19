@@ -210,45 +210,51 @@ export async function insertPotongan(
     }
 
     // ===== BATCH INSERT TRANSAKSI =====
+
     await db.transaction(async (tx) => {
-      for (const chunk of chunkArray(historyPotongan, 100)) {
-        await tx.insert(potongGajiTable).values(chunk).onConflictDoNothing();
-      }
-
-      if (simpananData.length > 0) {
-        for (const chunk of chunkArray(simpananData, 100)) {
-          await tx.insert(simpananTable).values(chunk).onConflictDoNothing();
+      try {
+        for (const chunk of chunkArray(historyPotongan, 100)) {
+          await tx.insert(potongGajiTable).values(chunk).onConflictDoNothing();
         }
-      }
 
-      if (angsuranData.length > 0) {
-        for (const chunk of chunkArray(angsuranData, 100)) {
-          await tx.insert(angsuranTable).values(chunk).onConflictDoNothing();
+        if (simpananData.length > 0) {
+          for (const chunk of chunkArray(simpananData, 100)) {
+            await tx.insert(simpananTable).values(chunk).onConflictDoNothing();
+          }
         }
-      }
 
-      if (angsuranCompletedData.length > 0) {
-        for (const chunk of chunkArray(angsuranCompletedData, 100)) {
-          await tx.insert(angsuranTable).values(chunk).onConflictDoNothing();
-
-          const completedPinjamanIds = Array.from(
-            new Set(chunk.map((a) => a.pinjamanId)),
-          );
-
-          await tx
-            .update(pinjamanTable)
-            .set({ statusPinjaman: "COMPLETED" })
-            .where(inArray(pinjamanTable.noPinjaman, completedPinjamanIds));
+        if (angsuranData.length > 0) {
+          for (const chunk of chunkArray(angsuranData, 100)) {
+            await tx.insert(angsuranTable).values(chunk).onConflictDoNothing();
+          }
         }
-      }
 
-      if (notificationData.length > 0) {
-        for (const chunk of chunkArray(notificationData, 100)) {
-          await tx
-            .insert(notificationsTable)
-            .values(chunk)
-            .onConflictDoNothing();
+        if (angsuranCompletedData.length > 0) {
+          for (const chunk of chunkArray(angsuranCompletedData, 100)) {
+            await tx.insert(angsuranTable).values(chunk).onConflictDoNothing();
+
+            const completedPinjamanIds = Array.from(
+              new Set(chunk.map((a) => a.pinjamanId)),
+            );
+
+            await tx
+              .update(pinjamanTable)
+              .set({ statusPinjaman: "COMPLETED" })
+              .where(inArray(pinjamanTable.noPinjaman, completedPinjamanIds));
+          }
         }
+
+        if (notificationData.length > 0) {
+          for (const chunk of chunkArray(notificationData, 100)) {
+            await tx
+              .insert(notificationsTable)
+              .values(chunk)
+              .onConflictDoNothing();
+          }
+        }
+      } catch (error) {
+        console.error("Transaction failed:", error);
+        throw error; // wajib rethrow agar transaction rollback
       }
     });
 
